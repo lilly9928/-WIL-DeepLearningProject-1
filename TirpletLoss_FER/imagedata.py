@@ -1,15 +1,8 @@
-import time
-import torch
+
 import random
 import numpy as np
-import pandas as pd
-import torch.nn as nn
-import torch.optim as optim
-import matplotlib.pyplot as plt
-from xgboost import XGBClassifier
-from torchvision import transforms, datasets
-from torch.utils.data import DataLoader, Dataset
-import os
+from torchvision import transforms
+from torch.utils.data import  Dataset
 
 class ImageData(Dataset):
 

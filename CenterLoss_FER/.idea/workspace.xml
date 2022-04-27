@@ -29,7 +29,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/Neural-Network-Design-master/Neural-Network-Design-master/Chapter 3 - An Illustrative Example/Exercises" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Tripletloss_FER" />
   </component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">

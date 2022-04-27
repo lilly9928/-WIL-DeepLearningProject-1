@@ -99,10 +99,10 @@ if __name__ == '__main__':
     device = torch.device("cuda" if use_cuda else "cpu")
     # Dataset
     fileroot = 'C:/Users/1315/Desktop/data'
-    traincsv_file = fileroot + '/' + 'val_ck.csv'
+    traincsv_file = fileroot + '/' + 'ck_train.csv'
     # valcsv_file = fileroot + '/' + 'test_ck.csv'
     # testcsv_file = fileroot + '/' + 'finaltest.csv'
-    train_img_dir = fileroot + '/' + 'val_ck/'
+    train_img_dir = fileroot + '/' + 'ck_train/'
     # val_img_dir = fileroot + '/' + 'test_ck/'
     # test_img_dir = fileroot + '/' + 'finaltest/'
 
@@ -110,13 +110,13 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
-    train_dataset = Plain_Dataset(csv_file=traincsv_file, img_dir=train_img_dir, datatype='val_ck',
+    train_dataset = Plain_Dataset(csv_file=traincsv_file, img_dir=train_img_dir, datatype='ck_train',
                                   transform=transformation)
     # val_dataset = Plain_Dataset(csv_file=valcsv_file, img_dir=val_img_dir, datatype='test_ck', transform=transformation)
     # test_dataset = Plain_Dataset(csv_file=testcsv_file, img_dir=test_img_dir, datatype='finaltest',
     #                              transform=transformation)
 
-    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True, num_workers=4)
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=4)
     # val_loader = DataLoader(val_dataset, batch_size=64, shuffle=True, num_workers=0)
     # test_loader = DataLoader(test_dataset, batch_size=64, shuffle=True, num_workers=0)
 
@@ -134,9 +134,9 @@ if __name__ == '__main__':
     sheduler = lr_scheduler.StepLR(optimizer4nn,20,gamma=0.8)
 
     # optimzer4center
-    optimzer4center = optim.SGD(centerloss.parameters(), lr =0.5)
+    optimzer4center = optim.SGD(centerloss.parameters(), lr = 0.5)
 
-    for epoch in range(100):
+    for epoch in range(1):
         sheduler.step()
         # print optimizer4nn.param_groups[0]['lr']
         train(epoch+1)

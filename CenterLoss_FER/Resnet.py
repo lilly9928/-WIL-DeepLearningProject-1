@@ -106,7 +106,7 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def forward(self,x):
+    def forward(self, x):
         output = self.prelu(self.conv1(x))
         output = self.prelu(self.conv2_x(output))
         x = self.prelu(self.conv3_x(output))
@@ -134,7 +134,7 @@ class ResNet(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 def resnet18():
-    return ResNet(BasicBlock, [2,2,2,2])
+    return ResNet(BasicBlock, [1, 1, 1, 1])
 
 def resnet34():
     return ResNet(BasicBlock, [3, 4, 6, 3])
