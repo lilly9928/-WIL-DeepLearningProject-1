@@ -9,12 +9,13 @@ from centerloss import CenterLoss
 import matplotlib.pyplot as plt
 from six.moves import urllib
 from dataset import Plain_Dataset
-from tqdm import tqdm
+# from tqdm import tqdm
 from EmotionNetwork import EmotionNetwork
+#
+# opener = urllib.request.build_opener()
+# opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+# urllib.request.install_opener(opener)
 
-opener = urllib.request.build_opener()
-opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-urllib.request.install_opener(opener)
 
 class Net(nn.Module):
     def __init__(self):
@@ -51,54 +52,58 @@ class Net(nn.Module):
 
         return ip1, F.log_softmax(ip2, dim=1)
 
-def visualize(feat, labels, epoch):
-    plt.ion()
-    c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
-         '#ff00ff', '#990000']
-    plt.clf()
-    for i in range(7):
-        plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
-    plt.legend(['0', '1', '2', '3', '4', '5', '6'], loc = 'upper right')
-    plt.xlim(xmin=-8,xmax=8)
-    plt.ylim(ymin=-8,ymax=8)
-    plt.text(-7.8,7.3,"epoch=%d" % epoch)
-    plt.savefig('./images/epoch=%d.jpg' % epoch)
-    plt.draw()
-    plt.pause(0.001)
 
 
-def train(epoch):
-    print("Training... Epoch = %d" % epoch)
-    ip1_loader = []
-    idx_loader = []
-    for (data, label) in tqdm(train_loader):
-        data = data.to(device)
-        label = label.to(device)
+# def visualize(feat, labels, epoch):
+#     plt.ion()
+#     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
+#          '#ff00ff', '#990000']
+#     plt.clf()
+#     for i in range(7):
+#         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
+#     plt.legend(['0', '1', '2', '3', '4', '5', '6'], loc = 'upper right')
+#     plt.xlim(xmin=-8,xmax=8)
+#     plt.ylim(ymin=-8,ymax=8)
+#     plt.text(-7.8,7.3,"epoch=%d" % epoch)
+#     plt.savefig('./images/epoch=%d.jpg' % epoch)
+#     plt.draw()
+#     plt.pause(0.001)
 
-        ip1,pred = model(data)
-        loss = nllloss(pred, label) + loss_weight * centerloss(label, ip1)
 
-        optimizer4nn.zero_grad()
-        optimzer4center.zero_grad()
+# def train(epoch):
+#     print("Training... Epoch = %d" % epoch)
+#     ip1_loader = []
+#     idx_loader = []
+#     for (data_aug, label) in tqdm(train_loader):
+#         data_aug = data_aug.to(device)
+#         label = label.to(device)
+#
+#         ip1,pred = model(data_aug)
+#         loss = nllloss(pred, label) + loss_weight * centerloss(label, ip1)
+#
+#         optimizer4nn.zero_grad()
+#         optimzer4center.zero_grad()
+#
+#         loss.backward()
+#
+#         optimizer4nn.step()
+#         optimzer4center.step()
+#
+#         ip1_loader.append(ip1)
+#         idx_loader.append((label))
+#
+#     feat = torch.cat(ip1_loader, 0)
+#     labels = torch.cat(idx_loader, 0)
+#     # visualize(feat.data_aug.cpu().numpy(),labels.data_aug.cpu().numpy(),epoch)
 
-        loss.backward()
+    # Set device
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        optimizer4nn.step()
-        optimzer4center.step()
+    # Model
+    model = Net().to(device)
 
-        ip1_loader.append(ip1)
-        idx_loader.append((label))
-
-    feat = torch.cat(ip1_loader, 0)
-    labels = torch.cat(idx_loader, 0)
-    visualize(feat.data.cpu().numpy(),labels.data.cpu().numpy(),epoch)
-
-if __name__ == '__main__':
-
-    use_cuda = torch.cuda.is_available() and True
-    device = torch.device("cuda" if use_cuda else "cpu")
     # Dataset
-    fileroot = 'C:/Users/1315/Desktop/data'
+    fileroot = 'C:/Users/1315/Desktop/data_aug'
     traincsv_file = fileroot + '/' + 'ck_train.csv'
     # valcsv_file = fileroot + '/' + 'test_ck.csv'
     # testcsv_file = fileroot + '/' + 'finaltest.csv'
@@ -110,6 +115,7 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))
     ])
+
     train_dataset = Plain_Dataset(csv_file=traincsv_file, img_dir=train_img_dir, datatype='ck_train',
                                   transform=transformation)
     # val_dataset = Plain_Dataset(csv_file=valcsv_file, img_dir=val_img_dir, datatype='test_ck', transform=transformation)
@@ -120,8 +126,6 @@ if __name__ == '__main__':
     # val_loader = DataLoader(val_dataset, batch_size=64, shuffle=True, num_workers=0)
     # test_loader = DataLoader(test_dataset, batch_size=64, shuffle=True, num_workers=0)
 
-    # Model
-    model = Net().to(device)
 
     # NLLLoss
     nllloss = nn.NLLLoss().to(device) #CrossEntropyLoss = log_softmax + NLLLoss
@@ -139,6 +143,6 @@ if __name__ == '__main__':
     for epoch in range(1):
         sheduler.step()
         # print optimizer4nn.param_groups[0]['lr']
-        train(epoch+1)
+        # train(epoch+1)
 
 

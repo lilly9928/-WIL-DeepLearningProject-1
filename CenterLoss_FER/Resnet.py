@@ -134,7 +134,7 @@ class ResNet(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 def resnet18():
-    return ResNet(BasicBlock, [1, 1, 1, 1])
+    return ResNet(BasicBlock, [2, 2, 2, 2])
 
 def resnet34():
     return ResNet(BasicBlock, [3, 4, 6, 3])

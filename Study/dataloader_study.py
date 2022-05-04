@@ -10,7 +10,7 @@ import torchvision.transforms as transforms
 
 # We want to convert text -> numerical values
 # 1. We need a Vocabulary mapping each word to a index
-# 2. We need to setup a Pytorch dataset to load the data
+# 2. We need to setup a Pytorch dataset to load the data_aug
 # 3. Setup padding of every batch (all examples should be
 #    of same seq_len and setup dataloader)
 # Note that loading the image is very easy compared to the text!

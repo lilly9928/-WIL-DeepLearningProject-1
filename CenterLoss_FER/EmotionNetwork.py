@@ -62,9 +62,9 @@ class EmotionNetwork(nn.Module):
 
     def forward(self, input):
         out = self.stn(input)
-        ip1,out = self.Resnet18(input)
-        # out = F.dropout(out)
-        # out = F.relu(self.fc1(out))
-        # out = self.fc2(out)
+        out = self.Resnet18(input)
+        out = F.dropout(out)
+        out = F.relu(self.fc1(out))
+        out = self.fc2(out)
 
-        return ip1,out
+        return out

@@ -21,7 +21,7 @@ batch_size = 8
 epochs =5
 learning_rate=0.001
 
-#data
+#data_aug
 train_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_train.csv")
 test_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_val.csv")
 
@@ -65,7 +65,7 @@ for epoch in range(epochs):
 
     for batch_idx, (anchor_img, positive_img, negative_img, anchor_label) in enumerate(train_loader):
 
-        #get data to cuda
+        #get data_aug to cuda
         anchor_img, positive_img, negative_img, anchor_label =\
             anchor_img.to(device), positive_img.to(device), negative_img.to(device), anchor_label.to(device)
 
