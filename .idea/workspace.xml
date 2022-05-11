@@ -28,7 +28,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/FER_220427_SupContrast" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Tripletloss_FER/TirpletLoss_FER" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -174,85 +174,62 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>39</line>
-          <option name="timeStamp" value="13" />
+          <line>41</line>
+          <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
           <line>40</line>
-          <option name="timeStamp" value="14" />
+          <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>41</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="24" />
+          <line>42</line>
+          <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
           <line>43</line>
-          <option name="timeStamp" value="25" />
+          <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>57</line>
-          <option name="timeStamp" value="26" />
+          <line>44</line>
+          <option name="timeStamp" value="54" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
+          <line>39</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
+          <line>66</line>
+          <option name="timeStamp" value="62" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
           <line>60</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>50</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
-          <line>49</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/main.py</url>
-          <line>164</line>
-          <option name="timeStamp" value="32" />
+          <option name="timeStamp" value="63" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FER_220427_SupContrast/utils.py</url>
           <line>67</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/main.py</url>
-          <line>165</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/main.py</url>
-          <line>166</line>
-          <option name="timeStamp" value="36" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/main.py</url>
-          <line>176</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FER_220427_SupContrast/main.py</url>
-          <line>183</line>
-          <option name="timeStamp" value="38" />
+          <option name="timeStamp" value="64" />
         </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
   </component>
 </project>

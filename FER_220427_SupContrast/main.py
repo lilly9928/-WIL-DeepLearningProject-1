@@ -13,6 +13,7 @@ from imagedata import ImageData
 from resnet_simclr import ResNetSimCLR
 from utils import info_nce_loss
 from FER_220427_SupContrast.data_aug.gaussian_blur import GaussianBlur
+from lar_optimizer import LARS
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
@@ -97,8 +98,8 @@ class NN(nn.Module):
 
 
 
-model = ResNetSimCLR(base_model="resnet18",out_dim=7)
-
+# model = ResNetSimCLR(base_model="resnet18",out_dim=7)
+model =Deep_Emotion()
 
 # model = NN(784,10)
 # x = torch.randn(64,784)
@@ -112,7 +113,7 @@ in_channel = 1
 num_classes = 7
 #learning_rate =0.001
 #batch_size = 64
-num_epochs = 5
+num_epochs = 100
 size = 48
 #Load Data
 train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
@@ -130,7 +131,7 @@ transformation = transforms.Compose([transforms.RandomResizedCrop(size=size),
 train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
 
 batch_sizes =[8]
-learning_rates = [0.001]
+learning_rates = [(0.3 * 8 / 256)]
 classes = ['0','1','2','3','4','5','6','7']
 
 for batch_size in batch_sizes:
@@ -144,12 +145,14 @@ for batch_size in batch_sizes:
         train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
         # loss and optimizer
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        # optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        optimizer= scheduler = LARS(model.parameters(), lr=learning_rate)
         #TODO:공부하기
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len(train_loader), eta_min=0,
-                                                               last_epoch=-1)
 
-        writer = SummaryWriter(f'runs/FER_SupContrast/MiniBatchSize {batch_size} LR {learning_rate}')
+        # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len(train_loader), eta_min=0,
+        #                                                        last_epoch=-1)
+
+        writer = SummaryWriter(f'runs/FER_SupContrast/MyNetwork_MiniBatchSize {batch_size} LR {learning_rate}')
 
         #train
         for epoch in range(num_epochs):
@@ -161,9 +164,10 @@ for batch_size in batch_sizes:
                # images = torch.cat(images,dim=0)
 
                 images = images.to(device)
+                labels = targets.to(device)
 
                 features = model(images)
-                logits,labels = info_nce_loss(batch_size=batch_size,features=features,device=device)
+                logits,labels = info_nce_loss(batch_size=batch_size,features=features,device=device,real_labels = labels)
                 loss = criterion(logits,labels)
                 losses.append(loss)
 
