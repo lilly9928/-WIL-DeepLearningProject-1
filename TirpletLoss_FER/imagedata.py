@@ -60,4 +60,5 @@ class ImageData(Dataset):
         else:
             if self.transform:
                 anchor_img = self.transform(self.to_pil(anchor_img))
-            return anchor_img
+                anchor_label = self.labels[item]
+            return anchor_img,anchor_label

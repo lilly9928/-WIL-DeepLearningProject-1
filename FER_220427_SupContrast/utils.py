@@ -1,5 +1,7 @@
 import os
 import shutil
+
+import numpy as np
 import torch.nn.functional as F
 import torch
 # import yaml
@@ -37,10 +39,10 @@ def accuracy(output, target, topk=(1,)):
 
 
 def info_nce_loss(batch_size, features,device,real_labels):
-    labels = real_labels
-   # labels = torch.cat([torch.arange(batch_size) for i in range(1)], dim=0)
+    #labels = real_labels
+    labels = torch.cat([torch.arange(batch_size) for i in range(1)], dim=0)
     labels = (labels.unsqueeze(0) == labels.unsqueeze(1)).float()
-   # labels = labels.to(device)
+    labels = labels.to(device)
     features = F.normalize(features, dim=1)
     similarity_matrix = torch.matmul(features, features.T)
     # assert similarity_matrix.shape == (
@@ -48,23 +50,18 @@ def info_nce_loss(batch_size, features,device,real_labels):
     # assert similarity_matrix.shape == labels.shape
 
     # discard the main diagonal from both: labels and similarities matrix
-    test=similarity_matrix.shape[0]
-    mask = torch.eye(similarity_matrix.shape[0], dtype=torch.bool).to(device)
+    mask = torch.eye(labels.shape[0], dtype=torch.bool).to(device)
     labels = labels[~mask].view(labels.shape[0], -1)
-
     similarity_matrix = similarity_matrix[~mask].view(similarity_matrix.shape[0], -1)
 
     # assert similarity_matrix.shape == labels.shape
 
     # select and combine multiple positives
-    bool_check = similarity_matrix[labels.bool()]
-    positives = similarity_matrix[0].view(labels.shape[1], -1)
-    #positives = similarity_matrix[labels.bool()]
-    #positives = []
-    #positives.append(similarity_matrix[labels.bool()].view(-1))
+    #positives = similarity_matrix[labels.bool()].view(labels.shape[0], -1)
+    positives =torch.max(similarity_matrix,dim=1).values.reshape(labels.shape[0], 1)
 
     # select only the negatives the negatives
-    boolne_check = similarity_matrix[~labels.bool()]
+    #TODO:postive값 빼고 negatives에 넣기
     negatives = similarity_matrix[~labels.bool()].view(similarity_matrix.shape[0], -1)
 
     logits = torch.cat([positives, negatives], dim=1)

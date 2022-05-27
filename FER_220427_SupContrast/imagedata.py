@@ -38,4 +38,5 @@ class ImageData(Dataset):
 
         if self.transform:
             img = self.transform(img)
+
         return img, lables
