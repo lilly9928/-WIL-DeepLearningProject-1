@@ -16,7 +16,7 @@ import torchvision.transforms as transforms
 # Note that loading the image is very easy compared to the text!
 
 # Download with: python -m spacy download en
-spacy_eng = spacy.load("en")
+spacy_eng = spacy.load("en_core_web_sm")
 
 
 class Vocabulary:

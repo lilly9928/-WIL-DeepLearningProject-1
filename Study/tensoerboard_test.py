@@ -9,6 +9,7 @@ import torchvision.datasets as datasets
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
+from torchsummary import summary
 
 
 import os
@@ -29,26 +30,43 @@ class NN(nn.Module):
         return x
 
 class CNN(nn.Module):
-    def __init__(self,in_channel=1,num_classes=10):
+    def __init__(self,in_channel=1,num_classes=7):
         super(CNN, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels=1,out_channels=8,kernel_size=(3,3),stride=(1,1),padding=(1,1)) #same convolution
+        self.conv1 = nn.Conv2d(in_channels=1,out_channels=8,kernel_size=(2,2),stride=(1,1),padding=(1,1)) #same convolution
         self.pool = nn.MaxPool2d(kernel_size=(2,2),stride=(2,2))
-        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
-        self.fc1 = nn.Linear(16*7*7, num_classes)
+        self.conv2 = nn.Conv2d(in_channels=8, out_channels=64, kernel_size=(2, 2), stride=(1, 1), padding=(1, 1))
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=(2, 2), stride=(1, 1), padding=(1, 1))
+        self.conv4 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=(2, 2), stride=(1, 1), padding=(1, 1))
+        self.conv5 = nn.Conv2d(in_channels=256, out_channels=512, kernel_size=(2, 2), stride=(1, 1), padding=(1, 1))
+        self.conv6 = nn.Conv2d(in_channels=512, out_channels=1024, kernel_size=(2, 2), stride=(1, 1), padding=(1, 1))
+        # self.fc1 = nn.Linear(1024,512)
+        # self.fc2 = nn.Linear(512,512)
+        self.fc3 = nn.Linear(4096, num_classes)
 
     def forward(self,x):
         x = F.relu(self.conv1(x))
-        x = self.pool(x)
         x = F.relu(self.conv2(x))
         x = self.pool(x)
+        x = F.relu(self.conv3(x))
+        x = self.pool(x)
+        x = F.relu(self.conv4(x))
+        x = self.pool(x)
+        x = F.relu(self.conv5(x))
+        x = self.pool(x)
+        x = F.relu(self.conv6(x))
+        x = self.pool(x)
         x= x.reshape(x.shape[0], -1)
-        x= self.fc1(x)
+        print(x.shape)
+        # x = self.fc1(x)
+        # x = self.fc2(x)
+        x= self.fc3(x)
 
         return x
 
-model = CNN()
-x = torch.randn(64,1,28,28)
-print(model(x).shape)
+model = CNN().to("cuda:0")
+x = torch.randn(64,1,48,48)
+# print(model(x).shape)
+summary(model, input_size=(1, 48, 48))
 
 # model = NN(784,10)
 # x = torch.randn(64,784)

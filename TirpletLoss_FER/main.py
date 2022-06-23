@@ -29,7 +29,7 @@ random.seed(2020)
 
 
 #hyperparmeters
-batch_size = 1200
+batch_size = 1000
 epochs =50
 learning_rate=0.001
 embedding_dims = 2
@@ -40,10 +40,13 @@ embedding_dims = 2
 train_df = pd.read_csv("C:/Users/1315/Desktop/data/train.csv")
 test_df = pd.read_csv("C:/Users/1315/Desktop/data/val.csv")
 
+color_jitter = transforms.ColorJitter(0.8 * 1, 0.8 * 1, 0.8 * 1, 0.2 * 1)
+
 train_ds = ImageData(train_df,
                  train=True,
                  transform=transforms.Compose([
                      transforms.ToTensor(),
+                     # transforms.RandomApply([color_jitter], p=0.8)
                    # transforms.RandomErasing(p=1, scale=(0.02, 0.33), ratio=(0.3, 3.3), value=0, inplace=False),
                  ]))
 train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=0)
@@ -70,10 +73,13 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 criterion =nn.TripletMarginLoss(margin=1.0, p=2)
 
 model.train()
-# summary(model, input_size=(1, 48, 48))
+summary(model, input_size=(1, 48, 48))
 
-writer = SummaryWriter(f'runs/FER/MiniBatchsize {batch_size} LR {learning_rate}')
+writer = SummaryWriter(f'runs/FER/MiniBatchsize {batch_size} LR {learning_rate}_withstn')
+#writer = SummaryWriter(f'runs/FER/image_test')
 classes = ['0','1','2','3','4','5','6']
+
+
 for epoch in range(epochs):
     running_loss = []
     accuracies = []
@@ -116,10 +122,7 @@ for epoch in range(epochs):
     writer.add_scalar('Training Loss', np.mean(running_loss), global_step=epoch)
     print("Epoch: {}/{} - Loss: {:.4f}".format(epoch + 1, epochs, np.mean(running_loss)))
 
-train_results = []
-labels = []
-classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-
+torch.save(model.state_dict(),'train01.pt')
 
 #check_accarcy
 model.eval()
@@ -139,56 +142,57 @@ with torch.no_grad():
     print(f"got{num_correct}/{num_sample} with accuarcy {float(num_correct) / float(num_sample) * 100:.2f}")
 
 
-# model.eval()
-# with torch.no_grad():
-#     for img, _, _, label in train_loader:
-#         img, label = img.to(device), label.to(device)
-#         train_results.append(model(img))
-#         # labels.append(label.cpu())
-#
-#
-# train_results = np.concatenate(train_results)
-# labels = np.concatenate(labels)
-#
-# class_labels = [classes[label] for label in labels]
+train_results = []
+labels = []
+classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
+model.eval()
+with torch.no_grad():
+    for img, _, _, label in train_loader:
+        img, label = img.to(device), label.to(device)
+        train_results.append(model(img).cpu().numpy())
+        labels.append(label.cpu())
 
-# ## visualization
-# plt.figure(figsize=(15, 10), facecolor="azure")
-# for label in np.unique(labels):
-#     tmp = train_results[labels == label]
-#     plt.scatter(tmp[:, 0], tmp[:, 1], label=classes[label])
-#
-# plt.legend()
-# plt.show()
-# #
-# tree = XGBClassifier(seed=180)
-# tree.fit(train_results, labels)
-#
-# test_results = []
-# test_labels = []
+train_results = np.concatenate(train_results)
+labels = np.concatenate(labels)
+labels.shape
 
-# model.eval()
-# with torch.no_grad():
-#     for img in test_loader:
-#         img = img.to(device)
-#         test_results.append(model(img).cpu().numpy())
-#         test_labels.append(tree.predict(model(img).cpu().numpy()))
-#
-# test_results = np.concatenate(test_results)
-# test_labels = np.concatenate(test_labels)
-#
-# plt.figure(figsize=(15, 10), facecolor="azure")
-# for label in np.unique(test_labels):
-#     tmp = test_results[test_labels == label]
-#     plt.scatter(tmp[:, 0], tmp[:, 1], label=classes[label])
-#
-# plt.legend()
-# plt.show()
-#
-# # accuracy
-# true_ = (tree.predict(test_results) == test_labels).sum()
-# len_ = len(test_labels)
-# print(tree.predict(test_results))
-# print(test_labels)
-# print("Accuracy :{}%".format((true_ / len_) * 100))  ##100%
+## visualization
+plt.figure(figsize=(15, 10), facecolor="azure")
+for label in np.unique(labels):
+    tmp = train_results[labels == label]
+    plt.scatter(tmp[:, 0], tmp[:, 1], label=classes[label])
+
+plt.legend()
+plt.show()
+
+tree = XGBClassifier(seed=180)
+tree.fit(train_results, labels)
+
+test_results = []
+test_labels = []
+
+model.eval()
+with torch.no_grad():
+    for img,label in test_loader:
+        img = img.to(device)
+        test_results.append(model(img).cpu().numpy())
+        test_labels.append(tree.predict(model(img).cpu().numpy()))
+
+test_results = np.concatenate(test_results)
+test_labels = np.concatenate(test_labels)
+
+plt.figure(figsize=(15, 10), facecolor="azure")
+for label in np.unique(test_labels):
+    tmp = test_results[test_labels == label]
+    plt.scatter(tmp[:, 0], tmp[:, 1], label=classes[label])
+
+plt.legend()
+plt.show()
+
+# accuracy
+true_ = (tree.predict(test_results) == test_labels).sum()
+len_ = len(test_labels)
+print(tree.predict(test_results))
+print(test_labels)
+print("Accuracy :{}%".format((true_ / len_) * 100))  ##100%

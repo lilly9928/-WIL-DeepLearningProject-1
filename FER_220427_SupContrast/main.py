@@ -1,4 +1,5 @@
-#import
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 import torch
 import torchvision
@@ -16,9 +17,6 @@ from FER_220427_SupContrast.data_aug.gaussian_blur import GaussianBlur
 from lar_optimizer import LARS
 from view_generator import ContrastiveLearningViewGenerator
 from resnet import resnet18
-
-import os
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 
 #create Network
@@ -99,18 +97,20 @@ train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
 traindir = "C:/Users/1315/Desktop/data/ck_train/"
 
 color_jitter = transforms.ColorJitter(0.8 * 1, 0.8 * 1, 0.8 * 1, 0.2 * 1)
-transformation = transforms.Compose([transforms.RandomResizedCrop(size=size),
-                                      transforms.RandomHorizontalFlip(),
-                                      transforms.RandomApply([color_jitter], p=0.8),
-                                      transforms.RandomGrayscale(p=0.2),
-                                      GaussianBlur(kernel_size=int(0.1 * size)),
-                                      transforms.ToTensor()])
+# transformation = transforms.Compose([transforms.RandomResizedCrop(size=size),
+#                                       transforms.RandomHorizontalFlip(),
+#                                       transforms.RandomApply([color_jitter], p=0.8),
+#                                       transforms.RandomGrayscale(p=0.2),
+#                                       GaussianBlur(kernel_size=int(0.1 * size)),
+#                                       transforms.ToTensor()])
+
+transformation = transforms.Compose([transforms.ToTensor()])
 
 
 train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
 
 
-batch_sizes =[8,25,32,100,256]
+batch_sizes =[32,100,256]
 learning_rates = [(0.3 * 8 / 256)]
 classes = ['0','1','2','3','4','5','6','7']
 
@@ -119,7 +119,7 @@ for batch_size in batch_sizes:
         step = 0
 
         # Initialize network
-        model = ResNetSimCLR(base_model="resnet50",out_dim=7)
+        model = ResNetSimCLR(base_model="resnet50",out_dim=7,batch_size=batch_size)
         # model = Network()
         model.to(device)
         model.train()
@@ -133,7 +133,7 @@ for batch_size in batch_sizes:
         # scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=len(train_loader), eta_min=0,
         #                                                        last_epoch=-1)
 
-        writer = SummaryWriter(f'runs/FER_SupContrast/MyNetwork_MiniBatchSize {batch_size} LR {learning_rate}')
+        writer = SummaryWriter(f'runs/FER_SupContrast/MyNetwork_MiniBatchSize {batch_size} LR {learning_rate}_LBP')
 
        # scaler = GradScaler(enabled=self.args.fp16_precision)
         #train
@@ -141,14 +141,15 @@ for batch_size in batch_sizes:
             losses = []
             accuracies =[]
 
-            for _,(images,targets) in enumerate(train_loader):
+            for _,(images,lbp_images,targets) in enumerate(train_loader):
                 #get data_aug to cuda if possible
                # images = torch.cat(images,dim=0)
 
                 images = images.to(device)
+                lbp_images= lbp_images.to(device,dtype=torch.float)
                 labels = targets.to(device)
 
-                features = model(images)
+                features = model(images,lbp_images)
                 logits,labels = info_nce_loss(batch_size=batch_size,features=features,device=device,real_labels=labels)
                 loss = criterion(logits,labels)
                 losses.append(loss)
@@ -160,7 +161,7 @@ for batch_size in batch_sizes:
                 optimizer.step()
 
                 #calculate 'running' training accuracy
-                img_grid = torchvision.utils.make_grid(images)
+                img_grid = torchvision.utils.make_grid(lbp_images)
                # num_correct = (logits==labels).sum()
                # running_train_acc = float(num_correct)/float(images.shape[0])
                # accuracies.append(running_train_acc)

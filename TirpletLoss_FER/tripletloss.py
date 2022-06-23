@@ -1,18 +1,10 @@
-import time
+
 import torch
-import random
-import numpy as np
-import pandas as pd
 import torch.nn as nn
-import torch.optim as optim
-import matplotlib.pyplot as plt
-from xgboost import XGBClassifier
-from torchvision import transforms, datasets
-from torch.utils.data import DataLoader, Dataset
-import os
+from torch.nn.modules.distance import PairwiseDistance
 
 class TripletLoss(nn.Module):
-    def __init__(self, margin=1.0):
+    def __init__(self, margin=0.1):
         super(TripletLoss, self).__init__()
         self.margin = margin
 

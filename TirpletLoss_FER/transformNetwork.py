@@ -12,16 +12,16 @@ class Network(nn.Module):
         self.Resnet18 = resnet18()
 
         self.localization = nn.Sequential(
-            nn.Conv2d(1, 8, kernel_size=7),
+            nn.Conv2d(1, 24, kernel_size=7),
             nn.MaxPool2d(2, stride=2),
             nn.ReLU(True),
-            nn.Conv2d(8, 10, kernel_size=5),
+            nn.Conv2d(24, 12, kernel_size=5),
             nn.MaxPool2d(2, stride=2),
             nn.ReLU(True),
         )
 
         self.fc_loc = nn.Sequential(
-            nn.Linear(640, 32),
+            nn.Linear(8*8*12, 32),
             nn.ReLU(True),
             nn.Linear(32, 3 * 2)
         )
@@ -29,7 +29,7 @@ class Network(nn.Module):
     def stn(self, x):
         xs = self.localization(x)
         xs = F.dropout(xs)
-        xs = xs.view(-1, 640)
+        xs = xs.view(-1, 8*8*12)
         theta = self.fc_loc(xs)
         theta = theta.view(-1, 2, 3)
 
@@ -39,8 +39,8 @@ class Network(nn.Module):
         return x
 
     def forward(self, x):
-        out = self.stn(x)
-        out = self.Resnet18(out)
+       # out = self.stn(x)
+        out = self.Resnet18(x)
 
         return out
 
