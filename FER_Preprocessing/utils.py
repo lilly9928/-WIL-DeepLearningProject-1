@@ -1,82 +1,9 @@
-import os
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
-
-import torch
-
-from torch import optim
-from torch.utils.data import DataLoader
-from torch import nn
-from torchvision.transforms import Compose, Resize, ToTensor,Normalize
-from torchsummary import summary
-import time
-import copy
-from ViT import ViT
-from imagedata import ImageData
-import torchvision.models as models
-
-#Todo: resnet 연결
-
-# Device configuration
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-#하이퍼파라미터
-in_channels = 1
-patch_size = 16
-emb_size = 768
-img_size = 224
-depth = 12
-n_classes = 7
-
-
-model = ViT().to(device)
-
-summary(model, (1, 244, 244), device='cuda')
-
-#Load Data
-train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
-traindir = "C:/Users/1315/Desktop/data/ck_train/"
-val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
-valdir = "C:/Users/1315/Desktop/data/ck_val/"
-
-transformation = Compose([ToTensor(),])
-
-train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
-val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
-
-# make dataload
-train_dl = DataLoader(train_dataset, batch_size=8, shuffle=True)
-val_dl = DataLoader(val_dataset, batch_size=8, shuffle=True)
-
-classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-
-# # check sample images
-# def show(img, y=None):
-#     npimg = img.numpy()
-#     npimg_tr = np.transpose(npimg, (1, 2, 0))
-#     plt.imshow(npimg_tr)
-#
-#     if y is not None:
-#         plt.title('labels:' + str(y))
-#
-#
-# grid_size=4
-# rnd_ind = np.random.randint(0, len(train_dataset), grid_size)
-#
-# x_grid = [train_dataset[i][0] for i in rnd_ind]
-# y_grid = [train_dataset[i][1] for i in rnd_ind]
-#
-# x_grid = utils.make_grid(x_grid, nrow=grid_size, padding=2)
-# plt.figure(figsize=(10,10))
-# show(x_grid, y_grid)
-# plt.show()
-
-# define the loss function, optimizer and lr_scheduler
-loss_func = nn.CrossEntropyLoss(reduction='sum')
-opt = optim.Adam(model.parameters(), lr=0.01)
-
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-lr_scheduler = ReduceLROnPlateau(opt, mode='min', factor=0.1, patience=10)
+import copy
+import torch
+import time
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # get current lr
 def get_lr(opt):
@@ -224,29 +151,3 @@ def train_val(model, params):
 
     model.load_state_dict(best_model_wts)
     return model, loss_history, metric_history
-
-
-# define the training parameters
-params_train = {
-    'num_epochs':100,
-    'optimizer':opt,
-    'loss_func':loss_func,
-    'train_dl':train_dl,
-    'val_dl':val_dl,
-    'sanity_check':False,
-    'lr_scheduler':lr_scheduler,
-    'path2weights':'./models/weights.pt',
-}
-
-# check the directory to save weights.pt
-def createFolder(directory):
-    try:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-    except os.OSerror:
-        print('Error')
-createFolder('./models')
-
-
-# Start training
-model, loss_hist, metric_hist = train_val(model, params_train)

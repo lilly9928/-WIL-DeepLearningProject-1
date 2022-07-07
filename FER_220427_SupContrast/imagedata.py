@@ -51,14 +51,14 @@ class ImageData(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
         img = Image.open(self.img_dir + self.datatype + str(idx) + '.jpg').convert('L')
-        lbp_img = Image.open(self.img_dir + self.datatype + str(idx) + '.jpg').convert('L')
-        lbp = compute_lbp(lbp_img)
+        #lbp_img = Image.open(self.img_dir + self.datatype + str(idx) + '.jpg').convert('L')
+        #lbp = compute_lbp(lbp_img)
         lables = np.array(self.lables[idx])
         lables = torch.from_numpy(lables).long()
 
         if self.transform:
             img = self.transform(img)
-            lbp = self.transform(lbp)
+         #   lbp = self.transform(lbp)
         #     img = compute_lbp(img)
 
-        return img,lbp, lables
+        return img, lables

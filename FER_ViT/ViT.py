@@ -9,10 +9,10 @@ from torchvision.transforms import Compose,Resize,ToTensor
 from einops import rearrange,reduce,repeat
 from einops.layers.torch import Rearrange,Reduce
 from torchsummary import summary
+import torchvision.models as models
 
-#ToDO : 백본 붙히기
 class PatchEmbedding(nn.Module):
-    def __init__(self, in_channels: int = 3, patch_size: int = 16, emb_size: int = 768, img_size: int = 224):
+    def __init__(self, in_channels: int = 1, patch_size: int = 16, emb_size: int = 768, img_size: int = 244):
         self.patch_size = patch_size
         super().__init__()
         self.projection = nn.Sequential(
@@ -21,6 +21,7 @@ class PatchEmbedding(nn.Module):
             Rearrange('b e (h) (w) -> b (h w) e'),
         )
         self.cls_token = nn.Parameter(torch.randn(1, 1, emb_size))
+        #self.positions = nn.Parameter(torch.randn((img_size // patch_size) ** 2 + 1, emb_size))
         self.positions = nn.Parameter(torch.randn((img_size // patch_size) ** 2 + 1, emb_size))
 
     def forward(self, x: Tensor) -> Tensor:
@@ -134,17 +135,15 @@ class ClassificationHead(nn.Sequential):
 
 class ViT(nn.Sequential):
     def __init__(self,
-                in_channels: int = 3,
+                in_channels: int = 1,
                 patch_size: int = 16,
                 emb_size: int = 768,
-                img_size: int = 224,
+                img_size: int = 244,
                 depth: int = 12,
-                n_classes: int = 1000,
+                n_classes: int = 7,
                 **kwargs):
         super().__init__(
-
             PatchEmbedding(in_channels, patch_size, emb_size, img_size),
             TransformerEncoder(depth, emb_size=emb_size, **kwargs),
             ClassificationHead(emb_size, n_classes)
         )
-

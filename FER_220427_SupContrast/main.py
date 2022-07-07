@@ -75,8 +75,8 @@ class NN(nn.Module):
 
 
 
-# model = ResNetSimCLR(base_model="resnet18",out_dim=7)
-model =Network()
+model = ResNetSimCLR(base_model="resnet18",out_dim=7)
+#model =Network()
 
 # model = NN(784,10)
 # x = torch.randn(64,784)
@@ -104,7 +104,7 @@ color_jitter = transforms.ColorJitter(0.8 * 1, 0.8 * 1, 0.8 * 1, 0.2 * 1)
 #                                       GaussianBlur(kernel_size=int(0.1 * size)),
 #                                       transforms.ToTensor()])
 
-transformation = transforms.Compose([transforms.ToTensor()])
+transformation = transforms.Compose([transforms.ToTensor(),transforms.Normalize((0.5,0.5,0.5),(0.5,0.5,0.5))])
 
 
 train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
@@ -141,15 +141,15 @@ for batch_size in batch_sizes:
             losses = []
             accuracies =[]
 
-            for _,(images,lbp_images,targets) in enumerate(train_loader):
+            for _,(images,targets) in enumerate(train_loader):
                 #get data_aug to cuda if possible
                # images = torch.cat(images,dim=0)
 
                 images = images.to(device)
-                lbp_images= lbp_images.to(device,dtype=torch.float)
+                #lbp_images= lbp_images.to(device,dtype=torch.float)
                 labels = targets.to(device)
 
-                features = model(images,lbp_images)
+                features = model(images)
                 logits,labels = info_nce_loss(batch_size=batch_size,features=features,device=device,real_labels=labels)
                 loss = criterion(logits,labels)
                 losses.append(loss)
@@ -161,14 +161,14 @@ for batch_size in batch_sizes:
                 optimizer.step()
 
                 #calculate 'running' training accuracy
-                img_grid = torchvision.utils.make_grid(lbp_images)
+               # img_grid = torchvision.utils.make_grid(lbp_images)
                # num_correct = (logits==labels).sum()
                # running_train_acc = float(num_correct)/float(images.shape[0])
                # accuracies.append(running_train_acc)
 
                 #plot things to tensorboard
 
-                writer.add_image('images', img_grid)
+               # writer.add_image('images', img_grid)
                 # writer.add_histogram('fc1', model.fc1.weight)
                 writer.add_scalar('Training Loss',sum(losses)/len(losses),global_step=step)
               #  writer.add_scalar('Training accuracy',running_train_acc,global_step=step)
@@ -193,7 +193,7 @@ def check_accuarcy(loader,model):
 
     with torch.no_grad():
         for x,y in loader:
-            x = x.to(device = device )
+            x = x.to(device = device)
             y = y.to(device=device)
 
             scores = model(x)

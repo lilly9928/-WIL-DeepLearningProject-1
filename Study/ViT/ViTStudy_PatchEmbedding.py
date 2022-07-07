@@ -13,7 +13,7 @@ from torchsummary import summary
 
 #라이브러리와 프레임워크
 
-x = torch.randn(8,3,224,224)
+x = torch.randn(8,1,224,224)
 
 # 배치 사이즈 8 ,채널 3 , h,w = 244,244
 # batch x channel x height x width -> batch x channel x patch number x ( patch size *patch size * channel)
@@ -28,7 +28,7 @@ print('patches:', patches.shape)
 # 테스트
 
 patch_size = 16
-in_channels = 3
+in_channels = 1
 emb_size = 768 # patch_size
 
 projection = nn.Sequential(nn.Conv2d(in_channels,emb_size,kernel_size=patch_size,stride=patch_size),Rearrange('b e (h) (w) -> b (h w) e '))
