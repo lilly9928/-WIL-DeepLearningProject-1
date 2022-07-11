@@ -12,6 +12,10 @@ import time
 import copy
 from ViT import ViT
 from imagedata import ImageData
+import numpy as np
+import torchvision
+
+import matplotlib.pyplot as plt
 import torchvision.models as models
 
 #Todo: resnet 연결
@@ -30,7 +34,7 @@ n_classes = 7
 
 model = ViT().to(device)
 
-summary(model, (1, 244, 244), device='cuda')
+summary(model, (1, 224, 224),device='cuda')
 
 #Load Data
 train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
@@ -63,9 +67,9 @@ classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 # rnd_ind = np.random.randint(0, len(train_dataset), grid_size)
 #
 # x_grid = [train_dataset[i][0] for i in rnd_ind]
-# y_grid = [train_dataset[i][1] for i in rnd_ind]
+# y_grid = [train_dataset[i][2] for i in rnd_ind]
 #
-# x_grid = utils.make_grid(x_grid, nrow=grid_size, padding=2)
+# x_grid = torchvision.utils.make_grid(x_grid, nrow=grid_size, padding=2)
 # plt.figure(figsize=(10,10))
 # show(x_grid, y_grid)
 # plt.show()
@@ -156,10 +160,11 @@ def loss_epoch(model, loss_func, dataset_dl, sanity_check=False, opt=None):
     running_metric = 0.0
     len_data = len(dataset_dl.dataset)
 
-    for xb, yb in dataset_dl:
-        xb = xb.to(device).float()
+    for x1,x2, yb in dataset_dl:
+        x1 = x1.to(device).float()
+        x2 = x2.to(device).float()
         yb = yb.to(device)
-        output = model(xb)
+        output = model(x1,x2)
 
         loss_b, metric_b = loss_batch(loss_func, output, yb, opt)
 
@@ -249,4 +254,4 @@ createFolder('./models')
 
 
 # Start training
-model, loss_hist, metric_hist = train_val(model, params_train)
+#model, loss_hist, metric_hist = train_val(model, params_train)

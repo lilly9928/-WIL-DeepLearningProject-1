@@ -37,7 +37,7 @@ class ImageData(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
         src =cv2.imread(self.img_dir + self.datatype + str(idx) + '.jpg')
-        img= cv2.resize(src,(244,244))
+        img= cv2.resize(src,(224,224))
         fd, hog_image = hog(img, orientations=24, pixels_per_cell=(16, 16),
                             cells_per_block=(1, 1), visualize=True, channel_axis=-1)
         hog_image_rescaled = exposure.rescale_intensity(hog_image, in_range=(0, 10))
@@ -45,6 +45,7 @@ class ImageData(Dataset):
         lables = torch.from_numpy(lables).long()
 
         if self.transform:
-            img = self.transform(hog_image_rescaled)
+            img = self.transform(img)
+            hog_img = self.transform(hog_image_rescaled)
 
-        return img,lables
+        return img,hog_img,lables

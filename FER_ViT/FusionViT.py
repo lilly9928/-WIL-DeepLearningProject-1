@@ -1,17 +1,36 @@
 import torch
-import torch.nn.functional as F
-import matplotlib.pyplot as plt
-
-from torch import nn
+import torch.nn as nn
 from torch import Tensor
-from PIL import Image
-from torchvision.transforms import Compose,Resize,ToTensor
+import torch.nn.functional as F
+import torchvision.models as models
 from einops import rearrange,reduce,repeat
 from einops.layers.torch import Rearrange,Reduce
-from torchsummary import summary
-import torchvision.models as models
 
 
+class MyEnsemble(nn.Module):
+    def __init__(self, embed_size=8):
+        super(MyEnsemble, self).__init__()
+        self.model = models.resnet50(pretrained=True)
+        # Remove last linear layer
+        #self.model.fc = nn.Identity()
+        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
+        self.model.fc = nn.Linear(self.model.fc.in_features,embed_size)
+
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(0.5)
+
+
+    def forward(self, x1,x2):
+        for param in model.parameters():
+            param.requires_grad_(False)
+
+        x1 = self.model(x1.clone())  # clone to make sure x is not changed by inplace methods
+        #x1 = x1.view(x1.size(0), -1)
+        x2 = self.model(x2)
+       # x2 = x2.view(x2.size(0), -1)
+        x = torch.cat((x1, x2), dim=1)
+
+        return self.dropout(self.relu(x))
 
 
 class PatchEmbedding(nn.Module):
@@ -115,18 +134,10 @@ class TransformerEncoderBlock(nn.Sequential):
             )
             ))
 
-# x = torch.randn(8, 3, 224, 224)
-# patches_embedded = PatchEmbedding()(x)
-# TransformerEncoderb = TransformerEncoderBlock()(patches_embedded)
-#
-# print(TransformerEncoderb.shape)
 
 class TransformerEncoder(nn.Sequential):
     def __init__(self, depth: int = 12, **kwargs):
         super().__init__(*[TransformerEncoderBlock(**kwargs) for _ in range(depth)])
-
-#*[TransformerEncoderBlock(**kwargs) for _ in range(depth)] 에서 앞에 *이 붙은 이유는 인자를 리스트형식으로 보내는게 아니라 각각 나눠서 보내줘야되기 때문입니다.
-# 예를 들면 인자를 [1,2,3]으로 넣을 경우 함수에서는 [1,2,3]으로 받지만 *[1, 2, 3]일 경우 1, 2, 3 으로 각각 나눠진 후 들어갑니다.
 
 
 class ClassificationHead(nn.Sequential):
@@ -151,3 +162,16 @@ class ViT(nn.Sequential):
             TransformerEncoder(depth, emb_size=emb_size, **kwargs),
             ClassificationHead(emb_size, n_classes)
         )
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#model = MyEnsemble()
+model = ViT().to(device)
+
+x1 = torch.randn(1, 1, 224, 224)
+x2= torch.randn(1, 1, 224, 224)
+inputx = torch.randn(1, 224, 224).to(device)
+
+#output = model(x1,x2)
+output = model(inputx)
+
+print(output.shape)
