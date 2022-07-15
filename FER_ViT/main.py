@@ -2,7 +2,7 @@ import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 import torch
-
+import cv2
 from torch import optim
 from torch.utils.data import DataLoader
 from torch import nn
@@ -14,11 +14,11 @@ from ViT import ViT
 from imagedata import ImageData
 import numpy as np
 import torchvision
-
+import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import torchvision.models as models
+from crossViT import CrossViT
 
-#Todo: resnet 연결
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -34,13 +34,15 @@ n_classes = 7
 
 model = ViT().to(device)
 
-summary(model, (1, 224, 224),device='cuda')
+summary(model, [(1, 244, 244)],device='cuda')
 
 #Load Data
 train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
 traindir = "C:/Users/1315/Desktop/data/ck_train/"
 val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
 valdir = "C:/Users/1315/Desktop/data/ck_val/"
+
+
 
 transformation = Compose([ToTensor(),])
 
@@ -53,7 +55,7 @@ val_dl = DataLoader(val_dataset, batch_size=8, shuffle=True)
 
 classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
-# # check sample images
+# check sample images
 # def show(img, y=None):
 #     npimg = img.numpy()
 #     npimg_tr = np.transpose(npimg, (1, 2, 0))
@@ -67,7 +69,7 @@ classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 # rnd_ind = np.random.randint(0, len(train_dataset), grid_size)
 #
 # x_grid = [train_dataset[i][0] for i in rnd_ind]
-# y_grid = [train_dataset[i][2] for i in rnd_ind]
+# y_grid = [classes[train_dataset[i][2]] for i in rnd_ind]
 #
 # x_grid = torchvision.utils.make_grid(x_grid, nrow=grid_size, padding=2)
 # plt.figure(figsize=(10,10))
@@ -108,32 +110,6 @@ def loss_batch(loss_func, output, target, opt=None):
     return loss_b.item(), metric_b
 
 
-# calculate the loss per epochs
-def loss_epoch(model, loss_func, dataset_dl, sanity_check=False, opt=None):
-    running_loss = 0.0
-    running_metric = 0.0
-    len_data = len(dataset_dl.dataset)
-
-    for xb, yb in dataset_dl:
-        xb = xb.to(device)
-        yb = yb.to(device)
-        output = model(xb)
-
-        loss_b, metric_b = loss_batch(loss_func, output, yb, opt)
-
-        running_loss += loss_b
-
-        if metric_b is not None:
-            running_metric += metric_b
-
-        if sanity_check is True:
-            break
-
-    loss = running_loss / len_data
-    metric = running_metric / len_data
-    return loss, metric
-
-
 # calculate the metric per mini-batch
 def metric_batch(output, target):
     pred = output.argmax(1, keepdim=True)
@@ -160,11 +136,10 @@ def loss_epoch(model, loss_func, dataset_dl, sanity_check=False, opt=None):
     running_metric = 0.0
     len_data = len(dataset_dl.dataset)
 
-    for x1,x2, yb in dataset_dl:
+    for x1, yb in dataset_dl:
         x1 = x1.to(device).float()
-        x2 = x2.to(device).float()
         yb = yb.to(device)
-        output = model(x1,x2)
+        output = model(x1)
 
         loss_b, metric_b = loss_batch(loss_func, output, yb, opt)
 
@@ -254,4 +229,29 @@ createFolder('./models')
 
 
 # Start training
-#model, loss_hist, metric_hist = train_val(model, params_train)
+model, loss_hist, metric_hist = train_val(model, params_train)
+
+# train-val progress
+num_epochs = params_train['num_epochs']
+
+# plot loss progress
+plt.title('Train-Val Loss')
+plt.plot(range(1, num_epochs+1), loss_hist['train'], label='train')
+plt.plot(range(1, num_epochs+1), loss_hist['val'], label='val')
+plt.ylabel('Loss')
+plt.xlabel('Training Epochs')
+plt.legend()
+plt.show()
+
+# plot accuracy progress
+plt.title('Train-Val Accuracy')
+plt.plot(range(1, num_epochs+1), metric_hist['train'], label='train')
+plt.plot(range(1, num_epochs+1), metric_hist['val'], label='val')
+plt.ylabel('Accuracy')
+plt.xlabel('Training Epochs')
+plt.legend()
+plt.show()
+
+# model.load_state_dict(torch.load('./models/weights.pt'))
+# model.eval()
+

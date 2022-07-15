@@ -5,6 +5,7 @@ import torch.nn.functional as F
 import torchvision.models as models
 from einops import rearrange,reduce,repeat
 from einops.layers.torch import Rearrange,Reduce
+from torchsummary import summary
 
 
 class MyEnsemble(nn.Module):
@@ -12,9 +13,9 @@ class MyEnsemble(nn.Module):
         super(MyEnsemble, self).__init__()
         self.model = models.resnet50(pretrained=True)
         # Remove last linear layer
-        #self.model.fc = nn.Identity()
+        self.model.fc = nn.Identity()
         self.model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
-        self.model.fc = nn.Linear(self.model.fc.in_features,embed_size)
+        #self.model.fc = nn.Linear(self.model.fc.in_features,embed_size)
 
         self.relu = nn.ReLU()
         self.dropout = nn.Dropout(0.5)
@@ -30,7 +31,13 @@ class MyEnsemble(nn.Module):
        # x2 = x2.view(x2.size(0), -1)
         x = torch.cat((x1, x2), dim=1)
 
-        return self.dropout(self.relu(x))
+        return x
+
+class mySequential(nn.Sequential):
+    def forward(self, *input):
+        for module in self._modules.values():
+            input = module(*input)
+        return input
 
 
 class PatchEmbedding(nn.Module):
@@ -164,14 +171,14 @@ class ViT(nn.Sequential):
         )
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#model = MyEnsemble()
+#model = MyEnsemble().to(device)
 model = ViT().to(device)
 
-x1 = torch.randn(1, 1, 224, 224)
-x2= torch.randn(1, 1, 224, 224)
-inputx = torch.randn(1, 224, 224).to(device)
+x1 = torch.randn(1,1, 224, 224).to(device)
+x2= torch.randn(1,1, 224, 224).to(device)
 
 #output = model(x1,x2)
-output = model(inputx)
+#print(output.shape)
 
-print(output.shape)
+#summary(model,[(1, 224, 224),(1, 224, 224)])
+summary(model, [(1, 224, 224)],device='cuda')

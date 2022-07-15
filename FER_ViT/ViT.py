@@ -142,7 +142,7 @@ class ViT(nn.Sequential):
                 in_channels: int = 1,
                 patch_size: int = 16,
                 emb_size: int = 768,
-                img_size: int = 224,
+                img_size: int = 244,
                 depth: int = 12,
                 n_classes: int = 7,
                 **kwargs):

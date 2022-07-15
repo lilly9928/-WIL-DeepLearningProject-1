@@ -12,7 +12,7 @@ from imagedata import ImageData
 from network import Resnet
 from utils import train_val
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
+import matplotlib.pyplot as plt
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -51,3 +51,23 @@ params_train = {
 
 model, loss_hist, metric_hist = train_val(model,params_train)
 
+# train-val progress
+num_epochs = params_train['num_epochs']
+
+# plot loss progress
+plt.title('Train-Val Loss')
+plt.plot(range(1, num_epochs+1), loss_hist['train'], label='train')
+plt.plot(range(1, num_epochs+1), loss_hist['val'], label='val')
+plt.ylabel('Loss')
+plt.xlabel('Training Epochs')
+plt.legend()
+plt.show()
+
+# plot accuracy progress
+plt.title('Train-Val Accuracy')
+plt.plot(range(1, num_epochs+1), metric_hist['train'], label='train')
+plt.plot(range(1, num_epochs+1), metric_hist['val'], label='val')
+plt.ylabel('Accuracy')
+plt.xlabel('Training Epochs')
+plt.legend()
+plt.show()
