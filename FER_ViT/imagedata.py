@@ -37,7 +37,7 @@ class ImageData(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
         src =cv2.imread(self.img_dir + self.datatype + str(idx) + '.jpg')
-        img= cv2.resize(src,(244,244))
+        img= cv2.resize(src,(256,256))
         fd, hog_image = hog(img, orientations=24, pixels_per_cell=(16, 16),
                             cells_per_block=(1, 1), visualize=True, channel_axis=-1)
         img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -49,5 +49,5 @@ class ImageData(Dataset):
             img = self.transform(img)
             hog_img = self.transform(hog_image_rescaled)
 
-        return hog_img,lables
+        return img,hog_img,lables
 

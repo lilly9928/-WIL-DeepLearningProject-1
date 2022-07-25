@@ -9,8 +9,8 @@ gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
 # ORB, BF-Hamming 로 knnMatch
 detector = cv2.ORB_create()
-kp1, desc1 = detector.detectAndCompute(gray1, None)
-kp2, desc2 = detector.detectAndCompute(gray2, None)
+kp1, desc1 = detector.detectAndCompute(img1, None)
+kp2, desc2 = detector.detectAndCompute(img2, None)
 matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 matches = matcher.match(desc1, desc2)
 
@@ -52,6 +52,7 @@ matchesMask = mask.ravel().tolist()
 res2 = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None, \
                     matchesMask = matchesMask,
                     flags=cv2.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
+
 
 # 모든 매칭점과 정상치 비율 ---⑧
 # accuracy=float(mask.sum()) / mask.size

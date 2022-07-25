@@ -1,9 +1,10 @@
 import torch
 from torch import nn, einsum
 import torch.nn.functional as F
-
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
+import torchvision.models as models
+from torchsummary import summary
 
 # helpers
 
@@ -187,6 +188,7 @@ class ImageEmbedder(nn.Module):
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = patch_size, p2 = patch_size),
             nn.Linear(patch_dim, dim),
+            #nn.Linear()
         )
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
@@ -194,6 +196,7 @@ class ImageEmbedder(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, img):
+        print(img.shape)
         x = self.to_patch_embedding(img)
         b, n, _ = x.shape
 
@@ -203,22 +206,46 @@ class ImageEmbedder(nn.Module):
 
         return self.dropout(x)
 
+class Resnet(nn.Module):
+
+    def __init__(self, output_layer=None):
+        super().__init__()
+        self.pretrained = models.resnet18(pretrained=True)
+        self.pretrained.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
+        self.output_layer = output_layer
+        self.layers = list(self.pretrained._modules.keys())
+        self.layer_count = 0
+        for l in self.layers:
+            if l != self.output_layer:
+                self.layer_count += 1
+            else:
+                break
+        for i in range(1, len(self.layers) - self.layer_count):
+            self.dummy_var = self.pretrained._modules.pop(self.layers[-i])
+
+        self.net = nn.Sequential(self.pretrained._modules)
+        self.pretrained = None
+
+    def forward(self, x):
+        x = self.net(x)
+        return x
+
 # cross ViT class
 
 class CrossViT(nn.Module):
     def __init__(
         self,
         *,
-        image_size:int = 256,
+        image_size:int = 33,
         num_classes:int = 7,
         sm_dim =192,
         lg_dim=384,
-        sm_patch_size = 16,
+        sm_patch_size = 3,
         sm_enc_depth = 1,
         sm_enc_heads = 8,
         sm_enc_mlp_dim = 2048,
         sm_enc_dim_head = 64,
-        lg_patch_size = 64,
+        lg_patch_size = 3,
         lg_enc_depth = 4,
         lg_enc_heads = 8,
         lg_enc_mlp_dim = 2048,
@@ -231,6 +258,7 @@ class CrossViT(nn.Module):
         emb_dropout = 0.1
     ):
         super().__init__()
+        self.resnet = Resnet(output_layer = 'layer4')
         self.sm_image_embedder = ImageEmbedder(dim = sm_dim, image_size = image_size, patch_size = sm_patch_size, dropout = emb_dropout)
         self.lg_image_embedder = ImageEmbedder(dim = lg_dim, image_size = image_size, patch_size = lg_patch_size, dropout = emb_dropout)
 
@@ -260,7 +288,9 @@ class CrossViT(nn.Module):
         self.lg_mlp_head = nn.Sequential(nn.LayerNorm(lg_dim), nn.Linear(lg_dim, num_classes))
 
     def forward(self, x1,x2):
-        sm_tokens = self.sm_image_embedder(x2)
+        x1 = self.resnet(x1)
+
+        sm_tokens = self.sm_image_embedder(x1)
         lg_tokens = self.lg_image_embedder(x2)
 
         sm_tokens, lg_tokens = self.multi_scale_encoder(sm_tokens, lg_tokens)
@@ -271,3 +301,4 @@ class CrossViT(nn.Module):
         lg_logits = self.lg_mlp_head(lg_cls)
 
         return sm_logits + lg_logits
+

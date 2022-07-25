@@ -3,6 +3,8 @@ import random
 import numpy as np
 from torchvision import transforms
 from torch.utils.data import  Dataset
+from skimage import exposure
+from skimage.feature import hog
 
 class ImageData(Dataset):
 

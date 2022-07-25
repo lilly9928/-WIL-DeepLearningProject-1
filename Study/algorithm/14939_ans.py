@@ -1,6 +1,5 @@
 import sys
 
-sys.setrecursionlimit(10 ** 8)  # pypy 제출시 삭제!
 input = lambda: sys.stdin.readline().rstrip()
 in_range = lambda y, x: 0 <= y < 10 and 0 <= x < 10
 

@@ -32,9 +32,9 @@ depth = 12
 n_classes = 7
 
 
-model = ViT().to(device)
+model = CrossViT().to(device)
 
-summary(model, [(1, 244, 244)],device='cuda')
+summary(model, [(1, 256, 256),(1, 256, 256)],device='cuda')
 
 #Load Data
 train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
@@ -136,10 +136,11 @@ def loss_epoch(model, loss_func, dataset_dl, sanity_check=False, opt=None):
     running_metric = 0.0
     len_data = len(dataset_dl.dataset)
 
-    for x1, yb in dataset_dl:
+    for x1,x2, yb in dataset_dl:
         x1 = x1.to(device).float()
+        x2 = x2.to(device).float()
         yb = yb.to(device)
-        output = model(x1)
+        output = model(x1,x2)
 
         loss_b, metric_b = loss_batch(loss_func, output, yb, opt)
 

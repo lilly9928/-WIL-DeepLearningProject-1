@@ -1,14 +1,19 @@
+
 import torch
 import numpy as np
-import cv2
 from PIL import Image
 import pandas as pd
+import numpy as np
 from torch.utils.data import Dataset
+import cv2
 from skimage import exposure
 from skimage.feature import hog
+import torchvision.transforms as transforms
+
 
 class ImageData(Dataset):
-    def __init__(self,csv_file,img_dir,datatype,transform):
+
+    def __init__(self, csv_file, img_dir, datatype, transform):
         '''
         Pytorch Dataset class
         params:-
@@ -28,17 +33,18 @@ class ImageData(Dataset):
     def __len__(self):
         return len(self.csv_file)
 
-    def __getitem__(self,idx):
+    def __getitem__(self, idx):
         if torch.is_tensor(idx):
             idx = idx.tolist()
-        src =cv2.imread(self.img_dir + self.datatype + str(idx) + '.jpg')
-        img = cv2.resize(src, (48, 48))
-        fd, hog_image = hog(img, orientations=24, pixels_per_cell=(16, 16),
-                            cells_per_block=(1, 1), visualize=True, channel_axis=-1)
-        hog_image_rescaled = exposure.rescale_intensity(hog_image, in_range=(0, 10))
+        src =cv2.imread(self.img_dir + self.datatype + str(idx) + '.jpg',0)
+        img= cv2.resize(src,(244,244))
+        f = np.fft.fft2(img)
+        fshift = np.fft.fftshift(f)
+        magnitude_spectrum = 20 * np.log(np.abs(fshift))
         lables = np.array(self.lables[idx])
         lables = torch.from_numpy(lables).long()
 
-        if self.transform :
-            img = self.transform(hog_image_rescaled)
+        if self.transform:
+            img = self.transform(magnitude_spectrum)
+
         return img,lables
