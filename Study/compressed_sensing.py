@@ -21,7 +21,7 @@ from skimage import data, exposure
 from skimage.io import imread
 import cv2
 
-src = cv2.imread('C:/Users/1315/Desktop/data/val_1/val_10.jpg')
+src = cv2.imread('C:/Users/1315/Desktop/data/ck_train/ck_train745.jpg')
 image= cv2.resize(src,(244,244))
 
 fd, hog_image = hog(image, orientations=24, pixels_per_cell=(16,16),

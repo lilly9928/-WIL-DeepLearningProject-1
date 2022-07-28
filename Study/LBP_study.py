@@ -72,7 +72,7 @@ def show_output(output_list):
 
 
 def main():
-    image_file = 'C:/Users/1315/Desktop/data/ck_train/ck_train0.jpg'
+    image_file = 'C:/Users/1315/Desktop/data/ck_val/ck_val9.jpg'
     img_bgr = cv2.imread(image_file)
     height, width, channel = img_bgr.shape
     img_gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
@@ -81,7 +81,7 @@ def main():
     for i in range(0, height):
         for j in range(0, width):
             img_lbp[i, j] = lbp_calculated_pixel(img_gray, i, j)
-    hist_lbp = cv2.calcHist([img_lbp], [0], None, [256], [0, 256])
+    #hist_lbp = cv2.calcHist([img_lbp], [0], None, [256], [0, 256])
     output_list = []
     output_list.append({
         "img": img_gray,
@@ -101,15 +101,15 @@ def main():
         "title": "LBP Image",
         "type": "gray"
     })
-    output_list.append({
-        "img": hist_lbp,
-        "xlabel": "Bins",
-        "ylabel": "Number of pixels",
-        "xtick": None,
-        "ytick": None,
-        "title": "Histogram(LBP)",
-        "type": "histogram"
-    })
+    #output_list.append({
+       # "img": hist_lbp,
+       # "xlabel": "Bins",
+       # "ylabel": "Number of pixels",
+       # "xtick": None,
+       # "ytick": None,
+       # "title": "Histogram(LBP)",
+       # "type": "histogram"
+   # })
 
     show_output(output_list)
 

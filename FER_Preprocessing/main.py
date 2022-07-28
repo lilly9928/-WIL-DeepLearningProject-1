@@ -18,22 +18,22 @@ import numpy as np
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-batch_size = 8
+batch_size = 64
 
 #image load
-train_csvdir= 'C:/Users/1315/Desktop/data/train.csv'
-traindir = "C:/Users/1315/Desktop/data/train/"
-val_csvdir= 'C:/Users/1315/Desktop/data/finaltest.csv'
-valdir = "C:/Users/1315/Desktop/data/finaltest/"
+train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
+traindir = "C:/Users/1315/Desktop/data/ck_train/"
+val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
+valdir = "C:/Users/1315/Desktop/data/ck_val/"
 
 transformation = transforms.Compose([transforms.ToTensor()])
-train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'train',transform = transformation)
+train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'finaltest',transform = transformation)
+val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
 val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
 
-model = Resnet(base_model="resnet18",out_dim=7).to(device)
+model = Resnet(base_model="resnet34",out_dim=7).to(device)
 
 loss_func = nn.CrossEntropyLoss(reduction='sum')
 opt = optim.Adam(model.parameters(), lr=0.01)
