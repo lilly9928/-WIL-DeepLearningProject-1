@@ -47,7 +47,7 @@ class ImageData(Dataset):
 
         if self.transform:
             #img = self.transform(img)
-            hog_img = self.transform(img)
+            hog_img = self.transform(hog_image)
 
         return hog_img,lables
 

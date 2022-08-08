@@ -34,7 +34,7 @@ n_classes = 7
 
 model = ViT().to(device)
 
-summary(model, [(3, 256, 256)],device='cuda')
+summary(model, [(1, 256, 256)],device='cuda')
 
 #Load Data
 train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'

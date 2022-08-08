@@ -20,7 +20,7 @@ pts1 = []
 pts2 = []
 # ratio test as per Lowe's paper
 for i,(m,n) in enumerate(matches):
-    if m.distance < 0.8 *n.distance:
+    if m.distance < 0.59 *n.distance:
         pts2.append(kp2[m.trainIdx].pt)
         pts1.append(kp1[m.queryIdx].pt)
 

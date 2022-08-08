@@ -8,7 +8,7 @@ class Resnet(nn.Module):
         self.resnet_dict = {"resnet18":models.resnet18(pretrained=False,num_classes = out_dim),
                             "resnet34": models.resnet34(pretrained=False,num_classes= out_dim)}
         self.backbone = self._get_basemodel(base_model)
-        self.backbone.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
+        self.backbone.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=3, bias=False)
 
 
     def _get_basemodel(self, model_name):

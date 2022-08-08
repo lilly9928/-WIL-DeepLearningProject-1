@@ -45,7 +45,7 @@ class ImageData(Dataset):
         lables = torch.from_numpy(lables).long()
 
         if self.transform:
-            #img = self.transform(img)
-            img = self.transform(hog_image_rescaled)
+            img = self.transform(img)
+            #img = self.transform(hog_image_rescaled)
 
         return img,lables
