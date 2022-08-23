@@ -159,7 +159,7 @@ class Resnet(nn.Module):
 
     def __init__(self, output_layer=None):
         super().__init__()
-        self.pretrained = models.resnet34(pretrained=True)
+        self.pretrained = models.resnet18(pretrained=True)
         self.pretrained.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
         self.output_layer = output_layer
         self.layers = list(self.pretrained._modules.keys())
