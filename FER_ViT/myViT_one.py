@@ -9,31 +9,6 @@ from torchsummary import summary
 import numpy as np
 
 
-class MyEnsemble(nn.Module):
-    def __init__(self, embed_size=8):
-        super(MyEnsemble, self).__init__()
-        self.model = models.resnet50(pretrained=True)
-        # Remove last linear layer
-        self.model.fc = nn.Identity()
-        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
-        #self.model.fc = nn.Linear(self.model.fc.in_features,embed_size)
-
-        self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(0.5)
-
-
-    def forward(self, x1,x2):
-        for param in model.parameters():
-            param.requires_grad_(False)
-
-        x1 = self.model(x1.clone())  # clone to make sure x is not changed by inplace methods
-        #x1 = x1.view(x1.size(0), -1)
-        x2 = self.model(x2)
-       # x2 = x2.view(x2.size(0), -1)
-        x = torch.cat((x1, x2), dim=1)
-
-        return x
-
 class mySequential(nn.Sequential):
     def forward(self, *input):
         for module in self._modules.values():
@@ -212,7 +187,6 @@ class ViT(nn.Module):
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#model = MyEnsemble().to(device)
 model = ViT().to(device)
 
 

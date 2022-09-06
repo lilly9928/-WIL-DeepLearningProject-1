@@ -1,12 +1,11 @@
-import cv2
+import torch
+import torch.nn as nn
 
-capture = cv2.VideoCapture(0)
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+triplet_loss = nn.TripletMarginLoss(margin=1.0, p=2)
+anchor = torch.randn(100, 128, requires_grad=True)
+positive = torch.randn(100, 128, requires_grad=True)
+negative = torch.randn(100, 128, requires_grad=True)
+output = triplet_loss(anchor, positive, negative)
+output.backward()
 
-while cv2.waitKey(33) < 0:
-    ret, frame = capture.read()
-    cv2.imshow("VideoFrame", frame)
-
-capture.release()
-cv2.destroyAllWindows()
+print(output)
