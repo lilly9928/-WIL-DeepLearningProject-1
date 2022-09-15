@@ -47,7 +47,7 @@ def main():
         batch_size=batch_size,
         num_workers=num_workers)
 
-    #데이터 로더에서 단어 수 , unk인덱스 가져옴 ( unk?)
+    #데이터 로더에서 단어 수 , unk인덱스 가져옴
     qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
     ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
     ans_unk_idx = data_loader['train'].dataset.ans_vocab.unk2idx
@@ -87,7 +87,7 @@ def main():
 
             if phase == 'train':
                 scheduler.step()
-                model.train() #train일 경우 model.train() -> 이함수도 찾아볼것
+                model.train()
             else:
                 model.eval()
                 # vaild일 경우 model.eval() -> 이함수도 찾아볼것
@@ -96,7 +96,6 @@ def main():
             for batch_idx, batch_sample in enumerate(data_loader[phase]):
 
                 #batch_sample에서 image, question,label에 가져와서 값 정의
-                #multi_choice ?
                 image = batch_sample['image'].to(device).float()
                 question = batch_sample['question'].to(device).long()
                 label = batch_sample['answer_label'].to(device).long()
@@ -111,8 +110,13 @@ def main():
                     #모델에 이미지, 질문 넣어주고 output 추출
                     #pred 1, pred 2 추출
                     output = model(image, question)      # [batch_size, ans_vocab_size=1000]
+                   # print('output',output)
                     _, pred_exp1 = torch.max(output, 1)  # [batch_size]
                     _, pred_exp2 = torch.max(output, 1)  # [batch_size]
+
+                   # print('pred_exp1', pred_exp1)
+                  #  print('pred_exp2', pred_exp2)
+
                     loss = criterion(output, label)
 
                     #train일 경우 역전파 실행
@@ -120,6 +124,12 @@ def main():
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
+
+
+                for ans in multi_choice:
+                    print(ans)
+                    print(pred_exp1.cpu())
+                    print(ans == pred_exp1.cpu())
 
                 # Evaluation metric of 'multiple choice'
                 # Exp1: our model prediction to '<unk>' IS accepted as the answer.

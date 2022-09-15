@@ -50,6 +50,7 @@ class QstEncoder(nn.Module):
         qst_vec = self.word2vec(question)                             # [batch_size, max_qst_length=30, word_embed_size=300]
         qst_vec = self.tanh(qst_vec)
         qst_vec = qst_vec.transpose(0, 1)                             # [max_qst_length=30, batch_size, word_embed_size=300]
+
         _, (hidden, cell) = self.lstm(qst_vec)                        # [num_layers=2, batch_size, hidden_size=512]
         qst_feature = torch.cat((hidden, cell), 2)                    # [num_layers=2, batch_size, 2*hidden_size=1024]
         qst_feature = qst_feature.transpose(0, 1)                     # [batch_size, num_layers=2, 2*hidden_size=1024]

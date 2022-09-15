@@ -85,3 +85,34 @@ def get_loader(input_dir, input_vqa_train, input_vqa_valid, max_qst_length, max_
         for phase in ['train', 'valid']}
 
     return data_loader
+
+if __name__ == "__main__":
+
+
+
+    input_dir = 'D:/data/vqa/coco/simple_vqa'
+    log_dir = './logs'
+    model_dir='./models'
+    max_qst_length = 30
+    max_num_ans =10
+    embed_size=64
+    word_embed_size=300
+    num_layers=2
+    hidden_size=16
+    learning_rate = 0.001
+    step_size = 10
+    gamma = 0.1
+    num_epochs=30
+    batch_size = 64
+    num_workers = 4
+    save_step=1
+
+
+    data = get_loader(
+        input_dir=input_dir,
+        input_vqa_train='train.npy',
+        input_vqa_valid='valid.npy',
+        max_qst_length=max_qst_length,
+        max_num_ans=max_num_ans,
+        batch_size=batch_size,
+        num_workers=num_workers)

@@ -49,3 +49,11 @@ class ImageData(Dataset):
             #img = self.transform(hog_image_rescaled)
 
         return img,lables
+
+
+#transformation = transforms.Compose([transforms.ToTensor()])
+# train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+#
+# val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
+# val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)

@@ -7,9 +7,13 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
+
 from torch.utils.tensorboard import SummaryWriter
-from imagedata import ImageData
+
+from raf_imagedata import RafDataset
+#from imagedata import ImageData
 #from imagedata_ft import ImageData
+
 from network import Resnet
 from utils import train_val
 from torch.optim.lr_scheduler import ReduceLROnPlateau
@@ -21,47 +25,58 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 batch_size = 64
 
 #image load
-train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
-traindir = "C:/Users/1315/Desktop/data/ck_train/"
-val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
-valdir = "C:/Users/1315/Desktop/data/ck_val/"
+# train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
+# traindir = "C:/Users/1315/Desktop/data/ck_train/"
+# val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
+# valdir = "C:/Users/1315/Desktop/data/ck_val/"
 
-transformation = transforms.Compose([transforms.ToTensor()])
-train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+# transformation = transforms.Compose([transforms.ToTensor()])
+# train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+#
+# val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
+# val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
+
+train_transforms = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    #transforms.Normalize((0.5611489, 0.44190985, 0.39697975), (0.21449453, 0.19619425, 0.18772252))
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                          std=[0.229, 0.224, 0.225]),
+    #transforms.RandomErasing(scale=(0.02, 0.25))
+    ])
+
+eval_transforms = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])])
+
+hog_transforms = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((224, 224)),
+    ])
+
+train_dataset= RafDataset(path='C:\\Users\\1315\\Desktop\\RAF\\basic', phase='train', transform=eval_transforms)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
-val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
+val_dataset= RafDataset(path='C:\\Users\\1315\\Desktop\\RAF\\basic', phase='test', transform=eval_transforms)
+val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False)
 
-model = Resnet(base_model="resnet34",out_dim=7).to(device)
+model = Resnet(base_model="resnet18",out_dim=11).to(device)
 
 loss_func = nn.CrossEntropyLoss(reduction='sum')
 opt = optim.Adam(model.parameters(), lr=0.01)
 lr_scheduler = ReduceLROnPlateau(opt, mode='min', factor=0.1, patience=10)
 
+classes = ['Happily Surprised', 'Happily Disgusted', 'Sadly Fearful', 'Sadly Angry', 'Sadly Surprised',
+             'Sadly Disgusted', 'Fearfully Angry',
+             'Fearfully Surprised', 'Angrily Surprised', 'Angrily Disgusted', 'Disgustedly Surprised']
 
-classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
-#
-# #check sample images
-# def show(img, y=None):
-#     npimg = img.numpy()
-#     npimg_tr = np.transpose(npimg, (1, 2, 0))
-#     plt.imshow(npimg_tr)
-#
-#     if y is not None:
-#         plt.title('labels:' + str(y))
-#
-#
-# grid_size=4
-# rnd_ind = np.random.randint(0, len(train_dataset), grid_size)
-#
-# x_grid = [train_dataset[i][0] for i in rnd_ind]
-# y_grid = [classes[train_dataset[i][1]] for i in rnd_ind]
-#
-# x_grid = torchvision.utils.make_grid(x_grid, nrow=grid_size, padding=2)
-# plt.figure(figsize=(10,10))
-# show(x_grid, y_grid)
-# plt.show()
+#mean_, std_ = calculate_norm(train_dataset)
+#print(f'평균(R,G,B): {mean_}\n표준편차(R,G,B): {std_}')
 
 
 # define the training parameters
@@ -77,24 +92,24 @@ params_train = {
 }
 
 model, loss_hist, metric_hist = train_val(model,params_train)
-
-# train-val progress
-num_epochs = params_train['num_epochs']
-
-# plot loss progress
-plt.title('Train-Val Loss')
-plt.plot(range(1, num_epochs+1), loss_hist['train'], label='train')
-plt.plot(range(1, num_epochs+1), loss_hist['val'], label='val')
-plt.ylabel('Loss')
-plt.xlabel('Training Epochs')
-plt.legend()
-plt.show()
-
-# plot accuracy progress
-plt.title('Train-Val Accuracy')
-plt.plot(range(1, num_epochs+1), metric_hist['train'], label='train')
-plt.plot(range(1, num_epochs+1), metric_hist['val'], label='val')
-plt.ylabel('Accuracy')
-plt.xlabel('Training Epochs')
-plt.legend()
-plt.show()
+#
+# # train-val progress
+# num_epochs = params_train['num_epochs']
+#
+# # plot loss progress
+# plt.title('Train-Val Loss')
+# plt.plot(range(1, num_epochs+1), loss_hist['train'], label='train')
+# plt.plot(range(1, num_epochs+1), loss_hist['val'], label='val')
+# plt.ylabel('Loss')
+# plt.xlabel('Training Epochs')
+# plt.legend()
+# plt.show()
+#
+# # plot accuracy progress
+# plt.title('Train-Val Accuracy')
+# plt.plot(range(1, num_epochs+1), metric_hist['train'], label='train')
+# plt.plot(range(1, num_epochs+1), metric_hist['val'], label='val')
+# plt.ylabel('Accuracy')
+# plt.xlabel('Training Epochs')
+# plt.legend()
+# plt.show()
