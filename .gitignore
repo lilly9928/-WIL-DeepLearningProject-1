@@ -114,3 +114,5 @@ CenterLoss_FER/images/epoch=96.jpg
 CenterLoss_FER/images/epoch=97.jpg
 CenterLoss_FER/images/epoch=98.jpg
 CenterLoss_FER/images/epoch=99.jpg
+*.ckpt
+*.txt

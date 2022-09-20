@@ -37,4 +37,4 @@ mul2idc[:len(ans2idc)] = ans2idc
 sample['answer_multi_choice'] = mul2idc
 
 
-print(sample)
+print(ans_vocab.idx2word(sample['answer_label']))
