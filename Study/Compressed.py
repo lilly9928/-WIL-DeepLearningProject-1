@@ -1,86 +1,75 @@
-import numpy as np
-import matplotlib as mpl
+import glob
+from skimage import io
 import matplotlib.pyplot as plt
-import scipy.optimize as spopt
-import scipy.fftpack as spfft
-import scipy.ndimage as spimg
-import cvxpy as cvx
+import cv2
 
+import numpy as np
+import os
+import argparse
+from PIL import Image
 
-def idct2(x):
-    return spfft.idct(spfft.idct(x.T, norm='ortho', axis=0).T, norm='ortho', axis=0)
+file = 'C:/Users/1315/Desktop/data/ck_train/ck_train0.jpg'
+img=cv2.imread(file)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-def dct2(x):
-    return spfft.dct(spfft.dct(x.T, norm='ortho', axis=0).T, norm='ortho', axis=0)
+fig = plt.figure(figsize=(12,8))
+f = np.fft.fft2(img)
+fshift = np.fft.fftshift(f)
+magnitude_spectrum = 20*np.log(np.abs(fshift))
+phase = np.angle(fshift)
 
+plt.subplot(131),plt.imshow(img,cmap='gray')
+plt.title('Input Image'),plt.xticks([]),plt.yticks([])
+plt.subplot(132),plt.imshow(magnitude_spectrum,cmap='gray')
+plt.title('Magnitude Spectrum'),plt.xticks([]),plt.yticks([])
+plt.subplot(133),plt.imshow(phase,cmap='gray')
+plt.title('Phase Spectrum'),plt.xticks([]),plt.yticks([])
 
-def evaluate(x, g, step):
-    """An in-memory evaluation callback."""
+plt.savefig('a',dpi=300,bbox_inches = 'tight')
 
-    # we want to return two things: 
-    # (1) the norm squared of the residuals, sum((Ax-b).^2), and
-    # (2) the gradient 2*A'(Ax-b)
+plt.show()
 
-    # expand x columns-first
-    x2 = x.reshape((nx, ny)).T
+fig = plt.figure(figsize=(8,8))
+(w,h) = fshift.shape
+half_w,half_h = int(w/2),int(h/2)
 
-    # Ax is just the inverse 2D dct of x2
-    Ax2 = idct2(x2)
+n = 1
+fshift[half_w-n:half_w+n+1,half_h-n:half_h+n+1]=0
+plt.imshow((20*np.log10(0.1+fshift)).astype(int),cmap='gray')
+plt.axis('off')
+plt.savefig('highfrequencyfilter',dpi=300,bbox_inches='tight')
+plt.show()
 
-    # stack columns and extract samples
-    Ax = Ax2.T.flat[ri].reshape(b.shape)
+hiu = np.fft.ifft2(fshift).real
+plt.figure(figsize=(10,10))
+plt.subplot(111),plt.imshow(hiu,cmap='gray')
+plt.title('Block'),plt.xticks([]),plt.yticks([])
+plt.axis('off')
+plt.savefig('hiu',dpi=300,bbox_inches='tight')
+plt.show()
 
-    # calculate the residual Ax-b and its 2-norm squared
-    Axb = Ax - b
-    fx = np.sum(np.power(Axb, 2))
+f = np.fft.fft2(img)
+fshift = np.fft.fftshift(f)
+magnitude_spectrum = 20*np.log(np.abs(fshift))
+phase = np.angle(fshift)
+fig = plt.figure(figsize=(8,8))
+(w,h)=fshift.shape
 
-    # project residual vector (k x 1) onto blank image (ny x nx)
-    Axb2 = np.zeros(x2.shape)
-    Axb2.T.flat[ri] = Axb # fill columns-first
+n = 1
+fshift[0:n,:] = 0
+fshift[:,0:n]=0
+fshift[w-n:w,:]=0
+fshift[:,h-n:h]=0
 
-    # A'(Ax-b) is just the 2D dct of Axb2
-    AtAxb2 = 2 * dct2(Axb2)
-    AtAxb = AtAxb2.T.reshape(x.shape) # stack columns
+plt.imshow((20*np.log10(0.1+fshift)).astype(int),cmap='gray')
+plt.axis('off')
+plt.savefig('lowfreqencyfiter',dpi=300,bbox_inches='tight')
+plt.show()
 
-    # copy over the gradient vector
-    np.copyto(g, AtAxb)
-
-    return fx
-
-# fractions of the scaled image to randomly sample at
-sample_sizes = (0.1, 0.01)
-
-# read original image
-Xorig = spimg.imread('C:/Users/1315/Desktop/test/happy_test.jpg')
-ny,nx,nchan = Xorig.shape
-
-# for each sample size
-Z = [np.zeros(Xorig.shape, dtype='uint8') for s in sample_sizes]
-masks = [np.zeros(Xorig.shape, dtype='uint8') for s in sample_sizes]
-for i,s in enumerate(sample_sizes):
-
-    # create random sampling index vector
-    k = round(nx * ny * s)
-    ri = np.random.choice(nx * ny, k, replace=False) # random sample of indices
-
-    # for each color channel
-    for j in range(nchan):
-
-        # extract channel
-        X = Xorig[:,:,j].squeeze()
-
-        # create images of mask (for visualization)
-        Xm = 255 * np.ones(X.shape)
-        Xm.T.flat[ri] = X.T.flat[ri]
-        masks[i][:,:,j] = Xm
-
-        # take random samples of image, store them in a vector b
-        b = X.T.flat[ri].astype(float)
-
-        # perform the L1 minimization in memory
-        Xat2 = owlqn(nx*ny, evaluate, None, 5)
-
-        # transform the output back into the spatial domain
-        Xat = Xat2.reshape(nx, ny).T # stack columns
-        Xa = idct2(Xat)
-        Z[i][:,:,j] = Xa.astype('uint8')
+liu = np.fft.ifft2(fshift).real
+plt.figure(figsize=(10,10))
+plt.subplot(111),plt.imshow(liu,cmap='gray')
+plt.title('Blocked high frequency image'),plt.xticks([]),plt.yticks([])
+plt.axis('off')
+plt.savefig('liu',dpi=300,bbox_inches='tight')
+plt.show()

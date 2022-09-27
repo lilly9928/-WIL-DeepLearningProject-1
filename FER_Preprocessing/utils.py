@@ -83,7 +83,7 @@ def loss_epoch(model, loss_func, dataset_dl, sanity_check=False, opt=None):
     running_metric = 0.0
     len_data = len(dataset_dl.dataset)
 
-    for xb, yb , _ in dataset_dl:
+    for xb, yb,_ in dataset_dl:
         xb = xb.to(device).float()
         yb = yb.to(device)
         output = model(xb)

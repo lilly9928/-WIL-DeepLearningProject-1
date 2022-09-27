@@ -12,7 +12,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from raf_imagedata import RafDataset
 #from imagedata import ImageData
-#from imagedata_ft import ImageData
+from imagedata_ft import ImageData
 
 from network import Resnet
 from utils import train_val
@@ -25,11 +25,11 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 batch_size = 64
 
 #image load
-# train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
-# traindir = "C:/Users/1315/Desktop/data/ck_train/"
-# val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
-# valdir = "C:/Users/1315/Desktop/data/ck_val/"
-
+# train_csvdir = 'D:/data/FER/ck_images/ck_train.csv'
+# traindir = "D:/data/FER/ck_images/Images/ck_train/"
+# val_csvdir= 'D:/data/FER/ck_images/ck_val.csv'
+# valdir = "D:/data/FER/ck_images/Images/ck_val/"
+#
 # transformation = transforms.Compose([transforms.ToTensor()])
 # train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
 # train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
@@ -59,21 +59,21 @@ hog_transforms = transforms.Compose([
         transforms.Resize((224, 224)),
     ])
 
-train_dataset= RafDataset(path='C:\\Users\\1315\\Desktop\\RAF\\basic', phase='train', transform=eval_transforms)
+train_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='train', transform=eval_transforms)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-val_dataset= RafDataset(path='C:\\Users\\1315\\Desktop\\RAF\\basic', phase='test', transform=eval_transforms)
+val_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='test', transform=eval_transforms)
 val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False)
 
-model = Resnet(base_model="resnet18",out_dim=11).to(device)
+model = Resnet(base_model="resnet18",out_dim=7).to(device)
 
 loss_func = nn.CrossEntropyLoss(reduction='sum')
 opt = optim.Adam(model.parameters(), lr=0.01)
 lr_scheduler = ReduceLROnPlateau(opt, mode='min', factor=0.1, patience=10)
 
-classes = ['Happily Surprised', 'Happily Disgusted', 'Sadly Fearful', 'Sadly Angry', 'Sadly Surprised',
-             'Sadly Disgusted', 'Fearfully Angry',
-             'Fearfully Surprised', 'Angrily Surprised', 'Angrily Disgusted', 'Disgustedly Surprised']
+# classes = ['Happily Surprised', 'Happily Disgusted', 'Sadly Fearful', 'Sadly Angry', 'Sadly Surprised',
+#              'Sadly Disgusted', 'Fearfully Angry',
+#              'Fearfully Surprised', 'Angrily Surprised', 'Angrily Disgusted', 'Disgustedly Surprised']
 
 #mean_, std_ = calculate_norm(train_dataset)
 #print(f'평균(R,G,B): {mean_}\n표준편차(R,G,B): {std_}')

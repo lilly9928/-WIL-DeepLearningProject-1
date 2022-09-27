@@ -1,3 +1,5 @@
+import torch
+
 def mask_tokens(self, inputs: torch.Tensor, mlm_probability=0.15, pad=True):
     labels = inputs.clone()
 
