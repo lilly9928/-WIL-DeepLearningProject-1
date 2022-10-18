@@ -64,8 +64,7 @@ def main():
     #loss 함수
     criterion = nn.CrossEntropyLoss()
 
-    #?
-    params = list(model.img_encoder.fc.parameters()) \
+    params = list(model.img_encoder.model.model.fc.parameters()) \
         + list(model.qst_encoder.parameters()) \
         + list(model.fc1.parameters()) \
         + list(model.fc2.parameters())
@@ -125,11 +124,11 @@ def main():
                         loss.backward()
                         optimizer.step()
 
-
-                for ans in multi_choice:
-                    print(ans)
-                    print(pred_exp1.cpu())
-                    print(ans == pred_exp1.cpu())
+                #
+                # for ans in multi_choice:
+                #     print(ans)
+                #     print(pred_exp1.cpu())
+                #     print(ans == pred_exp1.cpu())
 
                 # Evaluation metric of 'multiple choice'
                 # Exp1: our model prediction to '<unk>' IS accepted as the answer.

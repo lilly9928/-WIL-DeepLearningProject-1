@@ -60,7 +60,7 @@ def get_loader(input_dir, input_vqa_train, input_vqa_valid, max_qst_length, max_
         phase: transforms.Compose([transforms.ToTensor(),
                                    transforms.Normalize((0.485, 0.456, 0.406),
                                                         (0.229, 0.224, 0.225))])
-        for phase in ['train', 'valid']}
+        for phase in ['train', 'valid',]}
 
     vqa_dataset = {
         'train': VqaDataset(
@@ -74,7 +74,9 @@ def get_loader(input_dir, input_vqa_train, input_vqa_valid, max_qst_length, max_
             input_vqa=input_vqa_valid,
             max_qst_length=max_qst_length,
             max_num_ans=max_num_ans,
-            transform=transform['valid'])}
+            transform=transform['valid']),
+
+    }
 
     data_loader = {
         phase: torch.utils.data.DataLoader(

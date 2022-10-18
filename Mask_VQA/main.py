@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 import numpy as np
 import torch
@@ -9,6 +10,8 @@ from data_loader import get_loader
 from models import VqaModel
 #from util import text_helper
 from util import visualization
+import datetime
+import torchvision.models as models
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -16,6 +19,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
 
+    d = datetime.datetime.now()
     #input hyperparameter
 
     input_dir = 'D:/data/vqa/coco/simple_vqa'
@@ -30,7 +34,7 @@ def main():
     learning_rate = 0.001
     step_size = 10
     gamma = 0.1
-    num_epochs=30
+    num_epochs=50
     batch_size = 64
     num_workers = 4
     save_step=1
@@ -68,7 +72,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     #?
-    params = list(model.img_encoder.fc.parameters()) \
+    params = list(model.img_encoder.model.model.fc.parameters()) \
         + list(model.qst_encoder.parameters()) \
         + list(model.fc1.parameters()) \
         + list(model.fc2.parameters())
@@ -80,7 +84,6 @@ def main():
     #train 시작
     for epoch in range(num_epochs):
 
-        #PHASE ... ?
         for phase in ['train', 'valid']:
             #초기화
             running_loss = 0.0
@@ -153,7 +156,22 @@ def main():
             print('| {} SET | Epoch [{:02d}/{:02d}], Loss: {:.4f}, Acc(Exp1): {:.4f}, Acc(Exp2): {:.4f} \n'
                   .format(phase.upper(), epoch+1, num_epochs, epoch_loss, epoch_acc_exp1, epoch_acc_exp2))
 
-            visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy', data_loader['train'].dataset)
+            #visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy', data_loader['train'].dataset)
+
+            for _ in range(5):
+                image_path,question,res =visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy',
+                                             data_loader['train'].dataset)
+                # Log the visualization
+                with open(os.path.join(log_dir,'20221007_deformablecnn.txt') , 'a') as f:
+                    f.write('epoch'+str(epoch+1)+'\t'+str(image_path)+'\t'+str(question)+'\t'+str(res)+'\n')
+
+            for _ in range(5):
+                image_path, question, res = visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/valid.npy',
+                                                                         data_loader['valid'].dataset)
+                # Log the visualization
+                with open(os.path.join(log_dir, '20221008_deformablecnn.txt'), 'a') as f:
+                    f.write('valid, epoch' + str(epoch + 1) + '\t' + str(image_path) + '\t' + str(question) + '\t' + str(
+                        res) + '\n')
 
             # Log the loss and accuracy in an epoch.
             with open(os.path.join(log_dir, '{}-log-epoch-{:02}.txt')
@@ -168,5 +186,84 @@ def main():
             torch.save({'epoch': epoch+1, 'state_dict': model.state_dict()},
                        os.path.join(model_dir, 'model-epoch-{:02d}.ckpt'.format(epoch+1)))
 
+def image_test(data_loader,model,log_dir,log_name):
+
+    for _ in range(5):
+        image_path, question, res = visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy',
+                                                                 data_loader['train'].dataset)
+        # Log the visualization
+        with open(os.path.join(log_dir, log_name+'.txt'), 'a') as f:
+            f.write('valid, epoch' + '\t' + str(image_path) + '\t' + str(question) + '\t' + str(
+                res) + '\n')
+
+
+def check_accuaray(data_loader,model):
+    num_correct = 0
+    num_samples = 0
+    model.eval()
+
+    for phase in ['vaild']:
+        with torch.no_grad():
+            for batch_idx, batch_sample in data_loader[phase]:
+                image = batch_sample['image'].to(device).float()
+                question = batch_sample['question'].to(device).long()
+
+                scores = model(image)
+                _, predictions = scores.max(1)
+                num_correct += (predictions == y).sum()
+                num_samples += predictions.size(0)
+
+            print(f'Got {num_correct} / {num_samples} with accuracy {float(num_correct) / float(num_samples) * 100:.2f}')
+
+    model.train()
+
 if __name__ == '__main__':
-    main()
+    #main()
+    input_dir = 'D:/data/vqa/coco/simple_vqa'
+    log_dir = './logs'
+    model_dir = './models'
+    max_qst_length = 30
+    max_num_ans = 10
+    embed_size = 64
+    word_embed_size = 300
+    num_layers = 2
+    hidden_size = 16
+    learning_rate = 0.001
+    step_size = 10
+    gamma = 0.1
+    num_epochs = 30
+    batch_size = 64
+    num_workers = 4
+    save_step = 1
+
+    data_loader = get_loader(
+        input_dir=input_dir,
+        input_vqa_train='train.npy',
+        input_vqa_valid='test.npy',
+        max_qst_length=max_qst_length,
+        max_num_ans=max_num_ans,
+        batch_size=batch_size,
+        num_workers=num_workers)
+
+    qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
+    ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
+
+    model = VqaModel(embed_size=embed_size,
+                     qst_vocab_size=qst_vocab_size,
+                     ans_vocab_size=ans_vocab_size,
+                     word_embed_size=word_embed_size,
+                     num_layers=num_layers,
+                     hidden_size=hidden_size).to(device)
+    model.load_state_dict(torch.load("./models/model-epoch-50.ckpt"), strict=False)
+
+    image_test(data_loader,model,log_dir,'test')
+    check_accuaray(data_loader,model)
+
+
+   # print( VqaModel(
+   #      embed_size=embed_size,
+   #      qst_vocab_size=qst_vocab_size,
+   #      ans_vocab_size=ans_vocab_size,
+   #      word_embed_size=word_embed_size,
+   #      num_layers=num_layers,
+   #      hidden_size=hidden_size) )

@@ -1,4 +1,6 @@
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torchvision.models as models
 
 class Resnet(nn.Module):
@@ -24,5 +26,23 @@ class Resnet(nn.Module):
         image_out = self.backbone(x)
 
         return image_out
+
+class CropNetwork(nn.Module):
+
+    def __init__(self,input_size=(224,224)):
+        super(CropNetwork,self).__init__()
+
+        self.fc1 = nn.Linear(input_size[0],input_size[0]/2)
+        self.fc2 = nn.Linear(input_size[0]/2, (input_size[0]/2)/2)
+        self.fc3 = nn.Linear((input_size[0]/2)/2, 4)
+        self.dropout = nn.Dropout(0.2)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = self.dropout(F.relu(self.fc2(x)))
+        x = F.relu(self.fc3(x))
+
+        return x
+
 
 

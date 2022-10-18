@@ -10,6 +10,7 @@ from torchvision.transforms import Compose, Resize, ToTensor,Normalize
 from torchsummary import summary
 import time
 import copy
+from torchvision import transforms
 #from ViT import ViT
 from imagedata import ImageData
 import numpy as np
@@ -37,17 +38,17 @@ model = ViT().to(device)
 summary(model, [(1, 256, 256)],device='cuda')
 
 #Load Data
-train_csvdir= 'C:/Users/1315/Desktop/data/train.csv'
-traindir = "C:/Users/1315/Desktop/data/train/"
-val_csvdir= 'C:/Users/1315/Desktop/data/val_1.csv'
-valdir = "C:/Users/1315/Desktop/data/val_1/"
+train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
+traindir = "C:/Users/1315/Desktop/data/ck_train/"
+val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
+valdir = "C:/Users/1315/Desktop/data/ck_val/"
 
 
 
-transformation = Compose([ToTensor(),])
+transformation = Compose([ToTensor()])
 
-train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'train',transform = transformation)
-val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'val_1',transform = transformation)
+train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
 
 # make dataload
 train_dl = DataLoader(train_dataset, batch_size=8, shuffle=True)

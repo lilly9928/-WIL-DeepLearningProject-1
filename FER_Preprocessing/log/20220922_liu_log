@@ -1,0 +1,326 @@
+C:\Users\1315\anaconda3\envs\-WIL-Expression-Recognition-Study\python.exe D:/GitHub/-WIL-Expression-Recognition-Study/FER_Preprocessing/main.py
+Epoch 0/99, current lr= 0.01
+Copied best model weights!
+train loss: 2.823869, val loss: 4372.193466, accuracy: 11.52, time: 0.1041 min
+----------
+Epoch 1/99, current lr= 0.01
+Copied best model weights!
+train loss: 1.901617, val loss: 70.744484, accuracy: 11.52, time: 0.1542 min
+----------
+Epoch 2/99, current lr= 0.01
+Copied best model weights!
+train loss: 1.740860, val loss: 1.844439, accuracy: 25.45, time: 0.2048 min
+----------
+Epoch 3/99, current lr= 0.01
+train loss: 1.550326, val loss: 2.167395, accuracy: 10.91, time: 0.2535 min
+----------
+Epoch 4/99, current lr= 0.01
+Copied best model weights!
+train loss: 1.363265, val loss: 1.721914, accuracy: 29.09, time: 0.3041 min
+----------
+Epoch 5/99, current lr= 0.01
+Copied best model weights!
+train loss: 1.272153, val loss: 1.307793, accuracy: 50.91, time: 0.3547 min
+----------
+Epoch 6/99, current lr= 0.01
+train loss: 1.117853, val loss: 1.536422, accuracy: 52.12, time: 0.4036 min
+----------
+Epoch 7/99, current lr= 0.01
+train loss: 1.050407, val loss: 1.471975, accuracy: 42.42, time: 0.4517 min
+----------
+Epoch 8/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.916050, val loss: 1.205909, accuracy: 58.79, time: 0.5031 min
+----------
+Epoch 9/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.766917, val loss: 1.084965, accuracy: 59.39, time: 0.5537 min
+----------
+Epoch 10/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.625004, val loss: 0.781642, accuracy: 72.12, time: 0.6035 min
+----------
+Epoch 11/99, current lr= 0.01
+train loss: 0.495614, val loss: 4.261924, accuracy: 49.70, time: 0.6519 min
+----------
+Epoch 12/99, current lr= 0.01
+train loss: 0.374060, val loss: 0.901155, accuracy: 70.91, time: 0.7001 min
+----------
+Epoch 13/99, current lr= 0.01
+train loss: 0.307240, val loss: 0.907152, accuracy: 70.30, time: 0.7481 min
+----------
+Epoch 14/99, current lr= 0.01
+train loss: 0.292382, val loss: 0.928006, accuracy: 73.94, time: 0.7964 min
+----------
+Epoch 15/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.199901, val loss: 0.392699, accuracy: 89.09, time: 0.8464 min
+----------
+Epoch 16/99, current lr= 0.01
+train loss: 0.121563, val loss: 0.673800, accuracy: 80.00, time: 0.8946 min
+----------
+Epoch 17/99, current lr= 0.01
+train loss: 0.133987, val loss: 1.309707, accuracy: 66.06, time: 0.9430 min
+----------
+Epoch 18/99, current lr= 0.01
+train loss: 0.167174, val loss: 1.166442, accuracy: 75.76, time: 0.9913 min
+----------
+Epoch 19/99, current lr= 0.01
+train loss: 0.088499, val loss: 1.142425, accuracy: 70.30, time: 1.0394 min
+----------
+Epoch 20/99, current lr= 0.01
+train loss: 0.047492, val loss: 0.492914, accuracy: 89.09, time: 1.0875 min
+----------
+Epoch 21/99, current lr= 0.01
+train loss: 0.058418, val loss: 0.674639, accuracy: 84.24, time: 1.1358 min
+----------
+Epoch 22/99, current lr= 0.01
+train loss: 0.034830, val loss: 0.549842, accuracy: 86.06, time: 1.1838 min
+----------
+Epoch 23/99, current lr= 0.01
+train loss: 0.037361, val loss: 0.489506, accuracy: 89.70, time: 1.2320 min
+----------
+Epoch 24/99, current lr= 0.01
+train loss: 0.024690, val loss: 0.421204, accuracy: 92.73, time: 1.2801 min
+----------
+Epoch 25/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.028904, val loss: 0.382969, accuracy: 94.55, time: 1.3302 min
+----------
+Epoch 26/99, current lr= 0.01
+train loss: 0.041325, val loss: 1.077405, accuracy: 83.03, time: 1.3783 min
+----------
+Epoch 27/99, current lr= 0.01
+train loss: 0.065202, val loss: 0.443351, accuracy: 90.30, time: 1.4266 min
+----------
+Epoch 28/99, current lr= 0.01
+train loss: 0.043684, val loss: 1.054994, accuracy: 81.82, time: 1.4749 min
+----------
+Epoch 29/99, current lr= 0.01
+train loss: 0.039741, val loss: 2.364378, accuracy: 66.06, time: 1.5232 min
+----------
+Epoch 30/99, current lr= 0.01
+train loss: 0.095113, val loss: 1.719543, accuracy: 71.52, time: 1.5717 min
+----------
+Epoch 31/99, current lr= 0.01
+train loss: 0.072049, val loss: 4.682808, accuracy: 52.73, time: 1.6199 min
+----------
+Epoch 32/99, current lr= 0.01
+train loss: 0.080901, val loss: 0.584318, accuracy: 81.21, time: 1.6683 min
+----------
+Epoch 33/99, current lr= 0.01
+train loss: 0.074080, val loss: 0.693289, accuracy: 85.45, time: 1.7165 min
+----------
+Epoch 34/99, current lr= 0.01
+train loss: 0.060002, val loss: 0.650528, accuracy: 87.88, time: 1.7648 min
+----------
+Epoch 35/99, current lr= 0.01
+train loss: 0.088331, val loss: 4.788104, accuracy: 51.52, time: 1.8130 min
+----------
+Epoch 36/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.052818, val loss: 0.302158, accuracy: 90.30, time: 1.8641 min
+----------
+Epoch 37/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.033546, val loss: 0.204515, accuracy: 92.73, time: 1.9139 min
+----------
+Epoch 38/99, current lr= 0.01
+train loss: 0.016638, val loss: 0.303901, accuracy: 92.73, time: 1.9622 min
+----------
+Epoch 39/99, current lr= 0.01
+train loss: 0.024044, val loss: 0.389647, accuracy: 88.48, time: 2.0107 min
+----------
+Epoch 40/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.010948, val loss: 0.199752, accuracy: 95.15, time: 2.0607 min
+----------
+Epoch 41/99, current lr= 0.01
+train loss: 0.009649, val loss: 0.375760, accuracy: 93.94, time: 2.1089 min
+----------
+Epoch 42/99, current lr= 0.01
+train loss: 0.006528, val loss: 0.318535, accuracy: 93.94, time: 2.1572 min
+----------
+Epoch 43/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.008567, val loss: 0.140315, accuracy: 95.76, time: 2.2071 min
+----------
+Epoch 44/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.001534, val loss: 0.104944, accuracy: 96.97, time: 2.2568 min
+----------
+Epoch 45/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.000990, val loss: 0.096123, accuracy: 97.58, time: 2.3069 min
+----------
+Epoch 46/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.000200, val loss: 0.095368, accuracy: 97.58, time: 2.3572 min
+----------
+Epoch 47/99, current lr= 0.01
+train loss: 0.000153, val loss: 0.095714, accuracy: 97.58, time: 2.4052 min
+----------
+Epoch 48/99, current lr= 0.01
+Copied best model weights!
+train loss: 0.000184, val loss: 0.094629, accuracy: 97.58, time: 2.4552 min
+----------
+Epoch 49/99, current lr= 0.01
+train loss: 0.000174, val loss: 0.099533, accuracy: 97.58, time: 2.5030 min
+----------
+Epoch 50/99, current lr= 0.01
+train loss: 0.000141, val loss: 0.103225, accuracy: 97.58, time: 2.5514 min
+----------
+Epoch 51/99, current lr= 0.01
+train loss: 0.000143, val loss: 0.110368, accuracy: 97.58, time: 2.5997 min
+----------
+Epoch 52/99, current lr= 0.01
+train loss: 0.000102, val loss: 0.103946, accuracy: 97.58, time: 2.6485 min
+----------
+Epoch 53/99, current lr= 0.01
+train loss: 0.000125, val loss: 0.107826, accuracy: 97.58, time: 2.6970 min
+----------
+Epoch 54/99, current lr= 0.01
+train loss: 0.000084, val loss: 0.106750, accuracy: 97.58, time: 2.7452 min
+----------
+Epoch 55/99, current lr= 0.01
+train loss: 0.000112, val loss: 0.107845, accuracy: 97.58, time: 2.7941 min
+----------
+Epoch 56/99, current lr= 0.01
+train loss: 0.000073, val loss: 0.107076, accuracy: 97.58, time: 2.8430 min
+----------
+Epoch 57/99, current lr= 0.01
+train loss: 0.000142, val loss: 0.113854, accuracy: 97.58, time: 2.8917 min
+----------
+Epoch 58/99, current lr= 0.01
+train loss: 0.000245, val loss: 0.118332, accuracy: 96.97, time: 2.9406 min
+----------
+Epoch 59/99, current lr= 0.01
+Loading best model weights!
+train loss: 0.000063, val loss: 0.125265, accuracy: 96.97, time: 2.9892 min
+----------
+Epoch 60/99, current lr= 0.001
+train loss: 0.000272, val loss: 0.100998, accuracy: 97.58, time: 3.0376 min
+----------
+Epoch 61/99, current lr= 0.001
+train loss: 0.000201, val loss: 0.099549, accuracy: 97.58, time: 3.0863 min
+----------
+Epoch 62/99, current lr= 0.001
+train loss: 0.000288, val loss: 0.099892, accuracy: 97.58, time: 3.1342 min
+----------
+Epoch 63/99, current lr= 0.001
+train loss: 0.000226, val loss: 0.098936, accuracy: 97.58, time: 3.1825 min
+----------
+Epoch 64/99, current lr= 0.001
+train loss: 0.000559, val loss: 0.104479, accuracy: 97.58, time: 3.2310 min
+----------
+Epoch 65/99, current lr= 0.001
+train loss: 0.000278, val loss: 0.097913, accuracy: 97.58, time: 3.2797 min
+----------
+Epoch 66/99, current lr= 0.001
+train loss: 0.000173, val loss: 0.104041, accuracy: 97.58, time: 3.3283 min
+----------
+Epoch 67/99, current lr= 0.001
+train loss: 0.000218, val loss: 0.101257, accuracy: 97.58, time: 3.3769 min
+----------
+Epoch 68/99, current lr= 0.001
+train loss: 0.000233, val loss: 0.102090, accuracy: 97.58, time: 3.4260 min
+----------
+Epoch 69/99, current lr= 0.001
+train loss: 0.000126, val loss: 0.103108, accuracy: 97.58, time: 3.4749 min
+----------
+Epoch 70/99, current lr= 0.001
+Loading best model weights!
+train loss: 0.000122, val loss: 0.100382, accuracy: 97.58, time: 3.5238 min
+----------
+Epoch 71/99, current lr= 0.0001
+train loss: 0.000142, val loss: 0.095387, accuracy: 97.58, time: 3.5724 min
+----------
+Epoch 72/99, current lr= 0.0001
+train loss: 0.000123, val loss: 0.095041, accuracy: 97.58, time: 3.6210 min
+----------
+Epoch 73/99, current lr= 0.0001
+train loss: 0.000180, val loss: 0.099372, accuracy: 97.58, time: 3.6695 min
+----------
+Epoch 74/99, current lr= 0.0001
+train loss: 0.000158, val loss: 0.103700, accuracy: 97.58, time: 3.7186 min
+----------
+Epoch 75/99, current lr= 0.0001
+train loss: 0.000165, val loss: 0.099049, accuracy: 97.58, time: 3.7674 min
+----------
+Epoch 76/99, current lr= 0.0001
+Copied best model weights!
+train loss: 0.000496, val loss: 0.091208, accuracy: 97.58, time: 3.8179 min
+----------
+Epoch 77/99, current lr= 0.0001
+train loss: 0.000322, val loss: 0.092330, accuracy: 97.58, time: 3.8663 min
+----------
+Epoch 78/99, current lr= 0.0001
+train loss: 0.000180, val loss: 0.096305, accuracy: 97.58, time: 3.9151 min
+----------
+Epoch 79/99, current lr= 0.0001
+train loss: 0.000188, val loss: 0.096885, accuracy: 97.58, time: 3.9638 min
+----------
+Epoch 80/99, current lr= 0.0001
+train loss: 0.000138, val loss: 0.099286, accuracy: 97.58, time: 4.0124 min
+----------
+Epoch 81/99, current lr= 0.0001
+train loss: 0.000169, val loss: 0.099699, accuracy: 97.58, time: 4.0612 min
+----------
+Epoch 82/99, current lr= 0.0001
+train loss: 0.000191, val loss: 0.099252, accuracy: 97.58, time: 4.1095 min
+----------
+Epoch 83/99, current lr= 0.0001
+train loss: 0.000174, val loss: 0.099644, accuracy: 97.58, time: 4.1583 min
+----------
+Epoch 84/99, current lr= 0.0001
+train loss: 0.000869, val loss: 0.094058, accuracy: 97.58, time: 4.2071 min
+----------
+Epoch 85/99, current lr= 0.0001
+train loss: 0.000231, val loss: 0.100703, accuracy: 97.58, time: 4.2555 min
+----------
+Epoch 86/99, current lr= 0.0001
+train loss: 0.000183, val loss: 0.102403, accuracy: 97.58, time: 4.3039 min
+----------
+Epoch 87/99, current lr= 0.0001
+Loading best model weights!
+train loss: 0.000234, val loss: 0.100450, accuracy: 97.58, time: 4.3527 min
+----------
+Epoch 88/99, current lr= 1e-05
+train loss: 0.000351, val loss: 0.100454, accuracy: 97.58, time: 4.4014 min
+----------
+Epoch 89/99, current lr= 1e-05
+train loss: 0.000187, val loss: 0.095542, accuracy: 97.58, time: 4.4501 min
+----------
+Epoch 90/99, current lr= 1e-05
+train loss: 0.000232, val loss: 0.092702, accuracy: 97.58, time: 4.4986 min
+----------
+Epoch 91/99, current lr= 1e-05
+train loss: 0.000190, val loss: 0.092824, accuracy: 97.58, time: 4.5476 min
+----------
+Epoch 92/99, current lr= 1e-05
+train loss: 0.000266, val loss: 0.099401, accuracy: 97.58, time: 4.5973 min
+----------
+Epoch 93/99, current lr= 1e-05
+train loss: 0.000113, val loss: 0.098800, accuracy: 97.58, time: 4.6460 min
+----------
+Epoch 94/99, current lr= 1e-05
+train loss: 0.000171, val loss: 0.101296, accuracy: 97.58, time: 4.6944 min
+----------
+Epoch 95/99, current lr= 1e-05
+train loss: 0.000182, val loss: 0.103554, accuracy: 97.58, time: 4.7431 min
+----------
+Epoch 96/99, current lr= 1e-05
+train loss: 0.000308, val loss: 0.092566, accuracy: 97.58, time: 4.7918 min
+----------
+Epoch 97/99, current lr= 1e-05
+train loss: 0.000683, val loss: 0.093464, accuracy: 97.58, time: 4.8406 min
+----------
+Epoch 98/99, current lr= 1e-05
+Loading best model weights!
+train loss: 0.000187, val loss: 0.093593, accuracy: 97.58, time: 4.8896 min
+----------
+Epoch 99/99, current lr= 1.0000000000000002e-06
+train loss: 0.000188, val loss: 0.097284, accuracy: 97.58, time: 4.9383 min
+----------
+
+Process finished with exit code 0
