@@ -30,7 +30,7 @@ class Vocabulary:
 
     @staticmethod
     def tokenizer_eng(text):
-        return [tok.text.lower() for tok in spacy_eng.tokenizer(text)]
+        return [tok.text.lower() for tok in spacy_eng.tokenizer(str(text))]
 
     def build_vocabulary(self, sentence_list):
         frequencies = {}
@@ -68,6 +68,11 @@ class FlickrDataset(Dataset):
         self.imgs = self.df["image"]
         self.captions = self.df["caption"]
 
+        for idx in range(len(self.imgs)):
+            if "jpg" not in self.imgs[idx]:
+                print(f"{idx}delete")
+                self.df.drop([idx], axis=0)
+
         # Initialize vocabulary and build vocab
         self.vocab = Vocabulary(freq_threshold)
         self.vocab.build_vocabulary(self.captions.tolist())
@@ -76,8 +81,10 @@ class FlickrDataset(Dataset):
         return len(self.df)
 
     def __getitem__(self, index):
+
         caption = self.captions[index]
         img_id = self.imgs[index]
+
         img = Image.open(os.path.join(self.root_dir, img_id)).convert("RGB")
 
         if self.transform is not None:
@@ -86,6 +93,7 @@ class FlickrDataset(Dataset):
         numericalized_caption = [self.vocab.stoi["<SOS>"]]
         numericalized_caption += self.vocab.numericalize(caption)
         numericalized_caption.append(self.vocab.stoi["<EOS>"])
+
 
         return img, torch.tensor(numericalized_caption)
 
@@ -129,14 +137,34 @@ def get_loader(
 
 
 if __name__ == "__main__":
-    transform = transforms.Compose(
-        [transforms.Resize((224, 224)), transforms.ToTensor(),]
-    )
+    # transform = transforms.Compose(
+    #     [transforms.Resize((224, 224)), transforms.ToTensor(),]
+    # )
+    #
+    # loader, dataset = get_loader(
+    #     "D:/data/vqa/coco/simple_vqa/Images/train2014/", "D:/data/vqa/coco/simple_vqa/captions.txt", transform=transform
+    # )
+    #
+    # for idx, (imgs, captions) in enumerate(loader):
+    #
+    #     print(imgs)
+    #     print(captions)
 
-    loader, dataset = get_loader(
-        "flickr8k/images/", "flickr8k/captions.txt", transform=transform
-    )
+    df = pd.read_csv("D:/data/vqa/coco/simple_vqa/captions.txt")
 
-    for idx, (imgs, captions) in enumerate(loader):
-        print(imgs.shape)
-        print(captions.shape)
+    # Get img, caption columns
+    imgs = df["image"]
+    captions = df["caption"]
+    print(df["image"].shape)
+
+    for idx in range(len(imgs)):
+        if "jpg" not in imgs[idx]:
+            print(f"{idx}")
+            #del df[idx]
+            df= df.drop(216936)
+
+    print(df.shape)
+
+
+    df.to_csv('D:/data/vqa/coco/simple_vqa/captions.txt')
+

@@ -7,11 +7,14 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 from data_loader import get_loader
+#from data_loacer_for_only_caption import get_loader
 from models import VqaModel
+#from withcaption_model import VqaModel
 #from util import text_helper
 from util import visualization
 import datetime
 import torchvision.models as models
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -26,16 +29,17 @@ def main():
     log_dir = './logs'
     model_dir='./models'
     max_qst_length = 30
+    max_cap_length=50
     max_num_ans =10
     embed_size=64
     word_embed_size=300
     num_layers=2
-    hidden_size=16
+    hidden_size=32
     learning_rate = 0.001
     step_size = 10
     gamma = 0.1
-    num_epochs=50
-    batch_size = 64
+    num_epochs=30
+    batch_size = 16
     num_workers = 4
     save_step=1
 
@@ -49,6 +53,7 @@ def main():
         input_vqa_train='train.npy',
         input_vqa_valid='valid.npy',
         max_qst_length=max_qst_length,
+        #max_cap_length=max_cap_length,
         max_num_ans=max_num_ans,
         batch_size=batch_size,
         num_workers=num_workers)
@@ -56,6 +61,7 @@ def main():
     #데이터 로더에서 단어 수 , unk인덱스 가져옴
     qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
     ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
+    #cap_vocab_size = data_loader['train'].dataset.cap_vocab.vocab_size
     ans_unk_idx = data_loader['train'].dataset.ans_vocab.unk2idx
 
 
@@ -64,6 +70,7 @@ def main():
         embed_size=embed_size,
         qst_vocab_size=qst_vocab_size,
         ans_vocab_size=ans_vocab_size,
+       # cap_vocab_size=cap_vocab_size,
         word_embed_size=word_embed_size,
         num_layers=num_layers,
         hidden_size=hidden_size).to(device)
@@ -92,11 +99,11 @@ def main():
             batch_step_size = len(data_loader[phase].dataset) / batch_size
 
             if phase == 'train':
-                scheduler.step()
                 model.train()
+                scheduler.step()
             else:
                 model.eval()
-                # vaild일 경우 model.eval() -> 이함수도 찾아볼것
+
 
             #데이터로더에서 batch_idx, batch_sample가져옴
             for batch_idx, batch_sample in enumerate(data_loader[phase]):
@@ -104,10 +111,11 @@ def main():
                 #batch_sample에서 image, question,label에 가져와서 값 정의
                 image = batch_sample['image'].to(device).float()
                 question = batch_sample['question'].to(device).long()
+                #caption = batch_sample['caption'].to(device)
                 label = batch_sample['answer_label'].to(device).long()
                 multi_choice = batch_sample['answer_multi_choice']  # not tensor, list.
+               # qstcaps = batch_sample['qstcap'].to(device).long()
 
-                #zero_grad()함수 찾아보기
                 optimizer.zero_grad()
 
                 #torch.set_grad_enabled 찾아보기
@@ -128,14 +136,6 @@ def main():
                         loss.backward()
                         optimizer.step()
 
-                # for ans in multi_choice:
-                #     print(ans_vocab.idx2word(ans[0].item()))
-                #     print(ans_vocab.idx2word(pred_exp1[0].cpu().item()))
-                #     print(ans_vocab.idx2word(pred_exp2[0].cpu().item()))
-
-                # Evaluation metric of 'multiple choice'
-                # Exp1: our model prediction to '<unk>' IS accepted as the answer.
-                # Exp2: our model prediction to '<unk>' is NOT accepted as the answer.
                 pred_exp2[pred_exp2 == ans_unk_idx] = -9999
                 running_loss += loss.item()
                 running_corr_exp1 += torch.stack([(ans == pred_exp1.cpu()) for ans in multi_choice]).any(dim=0).sum()
@@ -162,14 +162,14 @@ def main():
                 image_path,question,res =visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy',
                                              data_loader['train'].dataset)
                 # Log the visualization
-                with open(os.path.join(log_dir,'20221007_deformablecnn.txt') , 'a') as f:
+                with open(os.path.join(log_dir,'20221031_deformablecnn.txt') , 'a') as f:
                     f.write('epoch'+str(epoch+1)+'\t'+str(image_path)+'\t'+str(question)+'\t'+str(res)+'\n')
 
             for _ in range(5):
                 image_path, question, res = visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/valid.npy',
                                                                          data_loader['valid'].dataset)
                 # Log the visualization
-                with open(os.path.join(log_dir, '20221008_deformablecnn.txt'), 'a') as f:
+                with open(os.path.join(log_dir, '20221031_deformablecnn.txt'), 'a') as f:
                     f.write('valid, epoch' + str(epoch + 1) + '\t' + str(image_path) + '\t' + str(question) + '\t' + str(
                         res) + '\n')
 
@@ -189,7 +189,7 @@ def main():
 def image_test(data_loader,model,log_dir,log_name):
 
     for _ in range(5):
-        image_path, question, res = visualization.print_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy',
+        image_path, question, res = visualization.print_korean_examples(model, 'D:/data/vqa/coco/simple_vqa/test.npy',
                                                                  data_loader['train'].dataset)
         # Log the visualization
         with open(os.path.join(log_dir, log_name+'.txt'), 'a') as f:
@@ -197,73 +197,54 @@ def image_test(data_loader,model,log_dir,log_name):
                 res) + '\n')
 
 
-def check_accuaray(data_loader,model):
-    num_correct = 0
-    num_samples = 0
-    model.eval()
-
-    for phase in ['vaild']:
-        with torch.no_grad():
-            for batch_idx, batch_sample in data_loader[phase]:
-                image = batch_sample['image'].to(device).float()
-                question = batch_sample['question'].to(device).long()
-
-                scores = model(image)
-                _, predictions = scores.max(1)
-                num_correct += (predictions == y).sum()
-                num_samples += predictions.size(0)
-
-            print(f'Got {num_correct} / {num_samples} with accuracy {float(num_correct) / float(num_samples) * 100:.2f}')
-
-    model.train()
-
 if __name__ == '__main__':
-    #main()
-    input_dir = 'D:/data/vqa/coco/simple_vqa'
-    log_dir = './logs'
-    model_dir = './models'
-    max_qst_length = 30
-    max_num_ans = 10
-    embed_size = 64
-    word_embed_size = 300
-    num_layers = 2
-    hidden_size = 16
-    learning_rate = 0.001
-    step_size = 10
-    gamma = 0.1
-    num_epochs = 30
-    batch_size = 64
-    num_workers = 4
-    save_step = 1
+    main()
+   #  input_dir = 'D:/data/vqa/coco/simple_vqa'
+   #  log_dir = './logs'
+   #  model_dir = './models'
+   #  max_qst_length = 30
+   #  max_num_ans = 10
+   #  embed_size = 64
+   #  word_embed_size = 300
+   #  num_layers = 2
+   #  hidden_size = 16
+   #  learning_rate = 0.001
+   #  step_size = 10
+   #  gamma = 0.1
+   #  num_epochs = 30
+   #  batch_size = 64
+   #  num_workers = 4
+   #  save_step = 1
+   # #
+   #  data_loader = get_loader(
+   #      input_dir=input_dir,
+   #      input_vqa_train='train.npy',
+   #      input_vqa_valid='test.npy',
+   #      max_qst_length=max_qst_length,
+   #      max_num_ans=max_num_ans,
+   #      batch_size=batch_size,
+   #      num_workers=num_workers)
+   #
+   #  qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
+   #  ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
+    # cap_vocab_size = data_loader['train'].dataset.cap_vocab.vocab_size
+    #
+    # model = VqaModel(embed_size=embed_size,
+    #                  qst_vocab_size=qst_vocab_size,
+    #                  ans_vocab_size=ans_vocab_size,
+    #                #  cap_vocab_size = cap_vocab_size,
+    #                  word_embed_size=word_embed_size,
+    #                  num_layers=num_layers,
+    #                  hidden_size=hidden_size).to(device)
+    # model.load_state_dict(torch.load("./models/model-epoch-30.ckpt"),strict=False)
+    #
+    # image_test(data_loader,model,log_dir,'30_kor')
 
-    data_loader = get_loader(
-        input_dir=input_dir,
-        input_vqa_train='train.npy',
-        input_vqa_valid='test.npy',
-        max_qst_length=max_qst_length,
-        max_num_ans=max_num_ans,
-        batch_size=batch_size,
-        num_workers=num_workers)
 
-    qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
-    ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
-
-    model = VqaModel(embed_size=embed_size,
-                     qst_vocab_size=qst_vocab_size,
-                     ans_vocab_size=ans_vocab_size,
-                     word_embed_size=word_embed_size,
-                     num_layers=num_layers,
-                     hidden_size=hidden_size).to(device)
-    model.load_state_dict(torch.load("./models/model-epoch-50.ckpt"), strict=False)
-
-    image_test(data_loader,model,log_dir,'test')
-    check_accuaray(data_loader,model)
-
-
-   # print( VqaModel(
-   #      embed_size=embed_size,
-   #      qst_vocab_size=qst_vocab_size,
-   #      ans_vocab_size=ans_vocab_size,
-   #      word_embed_size=word_embed_size,
-   #      num_layers=num_layers,
-   #      hidden_size=hidden_size) )
+    # print( VqaModel(
+    #     embed_size=embed_size,
+    #     qst_vocab_size=qst_vocab_size,
+    #     ans_vocab_size=ans_vocab_size,
+    #     word_embed_size=word_embed_size,
+    #     num_layers=num_layers,
+    #     hidden_size=hidden_size) )

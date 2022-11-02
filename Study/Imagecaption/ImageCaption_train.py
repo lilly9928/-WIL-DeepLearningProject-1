@@ -18,8 +18,8 @@ def train():
     )
 
     train_loader, dataset = get_loader(
-        root_folder = "C:/Users/1315/Desktop/vqadata/flickr8k/images",
-        annotation_file="C:/Users/1315/Desktop/vqadata/flickr8k/captions.txt",
+        root_folder = "D:/data/vqa/coco/simple_vqa/Images/train2014/",
+        annotation_file="D:/data/vqa/coco/simple_vqa/captions.txt",
         transform=transform,
         num_workers = 2
     )
@@ -33,13 +33,13 @@ def train():
     embed_size = 256
     hidden_size = 256
     vocab_size = len(dataset.vocab)
-    num_layers = 1
+    num_layers = 2
     learning_rate = 3e-4
-    num_epochs = 100
+    num_epochs = 30
 
     #for tensorboard
 
-    writer = SummaryWriter("../runs/flickr")
+    writer = SummaryWriter("../runs/coco")
     step = 0
 
     #initialize model , loss etc
@@ -70,12 +70,14 @@ def train():
             outputs = model(imgs,captions[:-1])
             loss = criterion(outputs.reshape(-1,outputs.shape[2]),captions.reshape(-1))
 
-            writer.add_scalar("Traning loss", loss.item(),global_step=step)
+            #print("Training loss", loss.item())
             step += 1
 
             optimizer.zero_grad()
             loss.backward(loss)
             optimizer.step()
+
+        print("epochs",epoch,"Training loss", loss.item())
 
 if __name__ == "__main__":
     train()

@@ -41,7 +41,11 @@ tensor = preprocess(image)
 
 prediction_var = Variable((tensor.unsqueeze(0)).cuda(), requires_grad=True)
 
-model = models.resnet18(pretrained=True)
+#model = models.resnet18(pretrained=True)
+model = Modify_Resnet(64)
+model.load_state_dict(torch.load("./logs/221007/model-epoch-50.ckpt"),strict=False)
+model = model.to(device)
+
 
 model.cuda()
 model.eval()

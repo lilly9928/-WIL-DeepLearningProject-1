@@ -3,6 +3,7 @@ import json
 import os
 import argparse
 import text_helper
+from pycocotools.coco import COCO
 from collections import defaultdict
 
 
@@ -12,15 +13,21 @@ def extract_answers(q_answers, valid_answer_set):
     return all_answers, valid_answers
 
 
-def vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, image_set):
+def vqa_processing(image_dir, annotation_file, annotation_caption_file,question_file, valid_answer_set, image_set):
     print('building vqa %s dataset' % image_set)
+
     if image_set in ['train2014', 'val2014']:
+        annFile = annotation_caption_file%image_set
+        coco_caps = COCO(annFile)
+
         load_answer = True
         with open(annotation_file % image_set) as f:
             annotations = json.load(f)['annotations']
-            qid2ann_dict = {ann['question_id']: ann for ann in annotations}
+            qid2ann_dict = {ann['question_id']:ann for ann in annotations}
+
     else:
         load_answer = False
+
     with open(question_file % image_set) as f:
         questions = json.load(f)['questions']
     coco_set_name = image_set.replace('-dev', '')
@@ -46,13 +53,24 @@ def vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, 
                       question_tokens=question_tokens)
 
         if load_answer:
+            caption_arr=[]
+            caption_arr_tokens=[]
             ann = qid2ann_dict[question_id]
+            captionid = coco_caps.getAnnIds(imgIds=image_id)
+            for index in range(len(captionid)):
+                caption_arr.append(coco_caps.loadAnns(captionid)[index]['caption'])
+
+            for arr in caption_arr:
+                caption_arr_tokens.append(text_helper.tokenize(arr))
+
             all_answers, valid_answers = extract_answers(ann['answers'], valid_answer_set)
             if len(valid_answers) == 0:
                 valid_answers = ['<unk>']
                 unk_ans_count += 1
             iminfo['all_answers'] = all_answers
             iminfo['valid_answers'] = valid_answers
+            iminfo['caption'] = caption_arr
+            iminfo['caption_tokens']=caption_arr_tokens
 
         dataset[n_q] = iminfo
     print('total %d out of %d answers are <unk>' % (unk_ans_count, len(questions)))
@@ -62,16 +80,17 @@ def vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, 
 def main(args):
     image_dir = 'D:/data/vqa/coco/simple_vqa' + '/Resized_Images/%s/'
     annotation_file = 'D:/data/vqa/coco/simple_vqa' + '/Annotations/v2_mscoco_%s_annotations.json'
+    annotation_caption_file = 'D:/data/vqa/coco/simple_vqa' + '/Annotations/annotations/caption/captions_%s.json'
     question_file = 'D:/data/vqa/coco/simple_vqa' + '/Questions/v2_OpenEnded_mscoco_%s_questions.json'
 
     vocab_answer_file = 'D:/data/vqa/coco/simple_vqa' + '/vocab_answers.txt'
     answer_dict = text_helper.VocabDict(vocab_answer_file)
     valid_answer_set = set(answer_dict.word_list)
 
-    train = vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, 'train2014')
-    valid = vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, 'val2014')
-    test = vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, 'test2015')
-    test_dev = vqa_processing(image_dir, annotation_file, question_file, valid_answer_set, 'test-dev2015')
+    train = vqa_processing(image_dir, annotation_file,annotation_caption_file, question_file, valid_answer_set, 'train2014')
+    valid = vqa_processing(image_dir, annotation_file, annotation_caption_file,question_file, valid_answer_set, 'val2014')
+    test = vqa_processing(image_dir, annotation_file, annotation_caption_file,question_file, valid_answer_set, 'test2015')
+    test_dev = vqa_processing(image_dir, annotation_file,annotation_caption_file, question_file, valid_answer_set, 'test-dev2015')
 
     np.save('D:/data/vqa/coco/simple_vqa' + '/train.npy', np.array(train))
     np.save('D:/data/vqa/coco/simple_vqa' + '/valid.npy', np.array(valid))

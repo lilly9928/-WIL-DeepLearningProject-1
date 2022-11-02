@@ -13,42 +13,42 @@ def print_examples(model, device, dataset):
     )
 
     model.eval()
-    test_img1 = transform(Image.open("C:/Users/1315/Desktop/vqadata/flickr8k/test_examples/dog.jpg").convert("RGB")).unsqueeze(
+    test_img1 = transform(Image.open("D:/data/vqa/coco/simple_vqa/test_image/1.jpg").convert("RGB")).unsqueeze(
         0
     )
-    print("Example 1 CORRECT: Dog on a beach by the ocean")
+    print("Example 1 CORRECT: a bunch of trays that have different food")
     print(
         "Example 1 OUTPUT: "
         + " ".join(model.caption_images(test_img1.to(device), dataset.vocab))
     )
     test_img2 = transform(
-        Image.open("C:/Users/1315/Desktop/vqadata/flickr8k/test_examples/child.jpg").convert("RGB")
+        Image.open("D:/data/vqa/coco/simple_vqa/test_image/2.jpg").convert("RGB")
     ).unsqueeze(0)
-    print("Example 2 CORRECT: Child holding red frisbee outdoors")
+    print("Example 2 CORRECT: a giraffe eating food from the top of the tree")
     print(
         "Example 2 OUTPUT: "
         + " ".join(model.caption_images(test_img2.to(device), dataset.vocab))
     )
-    test_img3 = transform(Image.open("C:/Users/1315/Desktop/vqadata/flickr8k/test_examples/bus.png").convert("RGB")).unsqueeze(
+    test_img3 = transform(Image.open("D:/data/vqa/coco/simple_vqa/test_image/3.jpg").convert("RGB")).unsqueeze(
         0
     )
-    print("Example 3 CORRECT: Bus driving by parked cars")
+    print("Example 3 CORRECT: a flower vase is sitting on a porch stand")
     print(
         "Example 3 OUTPUT: "
         + " ".join(model.caption_images(test_img3.to(device), dataset.vocab))
     )
     test_img4 = transform(
-        Image.open("C:/Users/1315/Desktop/vqadata/flickr8k/test_examples/boat.png").convert("RGB")
+        Image.open("D:/data/vqa/coco/simple_vqa/test_image/4.jpg").convert("RGB")
     ).unsqueeze(0)
-    print("Example 4 CORRECT: A small boat in the ocean")
+    print("Example 4 CORRECT:a zebra grazing on lush green grass in a field")
     print(
         "Example 4 OUTPUT: "
         + " ".join(model.caption_images(test_img4.to(device), dataset.vocab))
     )
     test_img5 = transform(
-        Image.open("C:/Users/1315/Desktop/vqadata/flickr8k/test_examples/horse.png").convert("RGB")
+        Image.open("D:/data/vqa/coco/simple_vqa/test_image/5.jpg").convert("RGB")
     ).unsqueeze(0)
-    print("Example 5 CORRECT: A cowboy riding a horse in the desert")
+    print("Example 5 CORRECT: woman in swim suit holding parasol on sunny day")
     print(
         "Example 5 OUTPUT: "
         + " ".join(model.caption_images(test_img5.to(device), dataset.vocab))
@@ -56,7 +56,7 @@ def print_examples(model, device, dataset):
     model.train()
 
 
-def save_checkpoint(state, filename="my_checkpoint.pth.tar"):
+def save_checkpoint(state, filename="my_checkpoint.pth"):
     print("=> Saving checkpoint")
     torch.save(state, filename)
 

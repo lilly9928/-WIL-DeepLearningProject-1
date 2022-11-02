@@ -37,9 +37,9 @@ if np.shape(mtrx) == ():
     print("No transformation possible")
 
 # ## derive rotation angle from homography
-# theta = - math.atan2(mtrx[0, 1], mtrx[0, 0]) * 180 / math.pi
-#
-# print('rotation angle',theta)
+theta = - math.atan2(mtrx[0, 1], mtrx[0, 0]) * 180 / math.pi
+
+print('rotation angle',theta)
 # for m in matches:
 #     print(kp1[m.queryIdx].pt,kp2[m.trainIdx].pt)
 

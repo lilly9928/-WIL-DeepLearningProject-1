@@ -91,7 +91,6 @@ def get_loader(input_dir, input_vqa_train, input_vqa_valid, max_qst_length, max_
 if __name__ == "__main__":
 
 
-
     input_dir = 'D:/data/vqa/coco/simple_vqa'
     log_dir = './logs'
     model_dir='./models'
@@ -112,9 +111,11 @@ if __name__ == "__main__":
 
     data = get_loader(
         input_dir=input_dir,
-        input_vqa_train='train.npy',
+        input_vqa_train='train_valid.npy',
         input_vqa_valid='valid.npy',
         max_qst_length=max_qst_length,
         max_num_ans=max_num_ans,
         batch_size=batch_size,
         num_workers=num_workers)
+
+    print(data['train'])

@@ -157,7 +157,7 @@ class VqaModel(nn.Module):
 
         result_answer = []
 
-        img_feature = self.img_encoder(img.unsqueeze(0))  # [batch_size, embed_size]
+        img_feature = self.img_encoder(img.unsqueeze(0)) # [batch_size, embed_size]
         qst_feature = self.qst_encoder(qst.unsqueeze(0))  # [batch_size, embed_size]
         combined_feature = torch.mul(img_feature, qst_feature)  # [batch_size, embed_size]
         combined_feature = self.tanh(combined_feature)
@@ -166,9 +166,13 @@ class VqaModel(nn.Module):
         combined_feature = self.tanh(combined_feature)
         combined_feature = self.dropout(combined_feature)
         combined_feature = self.fc2(combined_feature)  # [batch_size, ans_vocab_size=1000]
+
         predicted = combined_feature.argmax(1)
 
         result_answer.append(predicted.item())
 
         return [vocab.idx2word(idx) for idx in result_answer]
 
+
+if __name__ == '__main__':
+    print(Modify_Resnet)

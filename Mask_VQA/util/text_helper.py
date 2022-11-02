@@ -9,6 +9,10 @@ def tokenize(sentence):
     tokens = [t.strip() for t in tokens if len(t.strip()) > 0]
     return tokens
 
+def kortokenize(sentence):
+    tokens = SENTENCE_SPLIT_REGEX.split(sentence.lower())
+    tokens = [t.strip() for t in tokens if len(t.strip()) > 0]
+    return tokens
 
 def load_str_list(fname):
     with open(fname) as f:
