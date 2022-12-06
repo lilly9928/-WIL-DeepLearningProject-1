@@ -85,6 +85,7 @@ class FlickrDataset(Dataset):
         caption = self.captions[index]
         img_id = self.imgs[index]
 
+
         img = Image.open(os.path.join(self.root_dir, img_id)).convert("RGB")
 
         if self.transform is not None:

@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from resnet import resnet18
+import torchvision.models as models
 
 class Network(nn.Module):
     def __init__(self):
@@ -9,7 +9,8 @@ class Network(nn.Module):
         Deep_Emotion class contains the network architecture.
         '''
         super(Network, self).__init__()
-        self.Resnet18 = resnet18()
+        self.Resnet50 = models.resnet50()
+        self.Resnet50.fc = nn.Linear(512, 7)
 
         self.localization = nn.Sequential(
             nn.Conv2d(1, 24, kernel_size=7),
@@ -40,7 +41,7 @@ class Network(nn.Module):
 
     def forward(self, x):
         x = self.stn(x)
-        out = self.Resnet18(x)
+        out = self.Resnet50(x)
 
         return out
 

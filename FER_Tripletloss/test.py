@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-im_path = 'C:/Users/1315/Desktop/data/ck_train/ck_train0.jpg'
+im_path = 'C:/Users/1315/Desktop/clean/data/ck_train/ck_train0.jpg'
 image = Image.open(im_path)
 image = image.convert('RGB')
 

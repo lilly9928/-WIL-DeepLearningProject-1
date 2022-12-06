@@ -48,7 +48,7 @@ def train():
     optimizer = optim.Adam(model.parameters(), lr = learning_rate)
 
     if load_model:
-        step = load_checkpoint(torch.load("my_checkpoint.pth.tar"),model,optimizer)
+        step = load_checkpoint(torch.load("D:\GitHub\-WIL-Expression-Recognition-Study\Study\Imagecaption\checkpoint_coco_30.pth.tar"),model,optimizer)
 
     model.train()
 

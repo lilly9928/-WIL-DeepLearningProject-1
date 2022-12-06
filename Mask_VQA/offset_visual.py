@@ -128,7 +128,7 @@ image_path, img,question =random_examples('D:/data/vqa/coco/simple_vqa/test.npy'
 # X = transform(image).unsqueeze(dim=0).to(device)
 # Q = 'What color is the photo?'
 
-out = model(img.unsqueeze(dim=0).to(device).float(),question.unsqueeze(dim=0).to(device).long())
+out = model(img.unsqueeze(dim=0).to(device),question.unsqueeze(dim=0).to(device).long())
 #print(out)
 
 
@@ -137,8 +137,8 @@ print(len(save_output.outputs))
 #image = cv2.imread(image_path, cv2.IMREAD_COLOR)
 iamge = Image.open(image_path)
 image = np.array(iamge)
-plt.imshow(image)
-plt.show()
+# plt.imshow(image)
+# plt.show()
 
 input_img_h, input_img_w = image.shape[:2]
 roi_point_y, roi_point_x = input_img_h // 2, input_img_w // 2
@@ -184,14 +184,12 @@ for offsets in save_output.outputs:
         cv2.circle(image_bgr, center=(x, y), color=(0, 0, 255), radius=1, thickness=-1)
 
 cv2.circle(image_bgr, center=(roi_point_x, roi_point_y), color=(0, 255, 0), radius=1, thickness=-1)
-if image_bgr is None:
-    print('Wrong' )
-else:
-    #image_bgr = cv2.resize(image_bgr, dsize=(224, 224))
-    image_bgr=image_bgr.resize(224,224)
-
-plt.imshow(image_bgr)
-plt.show()
+#image_bgr = cv2.resize(image_bgr, dsize=(224, 224))
+#image_bgr=image_bgr.resize(224,224)
+image_bgr = np.reshape(image_bgr,(224,224))
+print(image_bgr)
+# plt.imshow(image_bgr)
+# plt.show()
 # out = model(X)
 # print(torch.argmax(out.squeeze(0)))
 # with torch.no_grad():

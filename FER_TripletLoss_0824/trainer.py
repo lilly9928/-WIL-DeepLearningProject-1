@@ -44,18 +44,24 @@ def train_epoch(train_loader, model, loss_fn, optimizer, cuda, log_interval, met
     losses = []
     total_loss = 0
 
-    for batch_idx, (data, target) in enumerate(train_loader):
+    for batch_idx, (anchor, positive,negative, target) in enumerate(train_loader):
         target = target if len(target) > 0 else None
-        if not type(data) in (tuple, list):
-            data = (data,)
+        if not type(anchor) in (tuple, list):
+            anchor = (anchor,)
+        if not type(positive) in (tuple, list):
+            positive = (positive,)
+        if not type(negative) in (tuple, list):
+            negative = (negative,)
         if cuda:
-            data = tuple(d.cuda() for d in data)
+            anchor = tuple(d.cuda() for d in anchor)
+            positive = tuple(d.cuda() for d in positive)
+            negative = tuple(d.cuda() for d in negative)
             if target is not None:
                 target = target.cuda()
 
 
         optimizer.zero_grad()
-        outputs = model(*data)
+        outputs = model(*anchor)
 
         if type(outputs) not in (tuple, list):
             outputs = (outputs,)
@@ -77,7 +83,7 @@ def train_epoch(train_loader, model, loss_fn, optimizer, cuda, log_interval, met
 
         if batch_idx % log_interval == 0:
             message = 'Train: [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                batch_idx * len(data[0]), len(train_loader.dataset),
+                batch_idx * len(anchor[0]), len(train_loader.dataset),
                 100. * batch_idx / len(train_loader), np.mean(losses))
             for metric in metrics:
                 message += '\t{}: {}'.format(metric.name(), metric.value())

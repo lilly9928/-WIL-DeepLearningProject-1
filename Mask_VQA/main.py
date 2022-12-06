@@ -198,47 +198,47 @@ def image_test(data_loader,model,log_dir,log_name):
 
 
 if __name__ == '__main__':
-    main()
-   #  input_dir = 'D:/data/vqa/coco/simple_vqa'
-   #  log_dir = './logs'
-   #  model_dir = './models'
-   #  max_qst_length = 30
-   #  max_num_ans = 10
-   #  embed_size = 64
-   #  word_embed_size = 300
-   #  num_layers = 2
-   #  hidden_size = 16
-   #  learning_rate = 0.001
-   #  step_size = 10
-   #  gamma = 0.1
-   #  num_epochs = 30
-   #  batch_size = 64
-   #  num_workers = 4
-   #  save_step = 1
-   # #
-   #  data_loader = get_loader(
-   #      input_dir=input_dir,
-   #      input_vqa_train='train.npy',
-   #      input_vqa_valid='test.npy',
-   #      max_qst_length=max_qst_length,
-   #      max_num_ans=max_num_ans,
-   #      batch_size=batch_size,
-   #      num_workers=num_workers)
+    #main()
+    input_dir = 'D:/data/vqa/coco/simple_vqa'
+    log_dir = './logs'
+    model_dir = './models'
+    max_qst_length = 30
+    max_num_ans = 10
+    embed_size = 64
+    word_embed_size = 300
+    num_layers = 2
+    hidden_size = 16
+    learning_rate = 0.001
+    step_size = 10
+    gamma = 0.1
+    num_epochs = 30
+    batch_size = 64
+    num_workers = 4
+    save_step = 1
    #
-   #  qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
-   #  ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
-    # cap_vocab_size = data_loader['train'].dataset.cap_vocab.vocab_size
-    #
-    # model = VqaModel(embed_size=embed_size,
-    #                  qst_vocab_size=qst_vocab_size,
-    #                  ans_vocab_size=ans_vocab_size,
-    #                #  cap_vocab_size = cap_vocab_size,
-    #                  word_embed_size=word_embed_size,
-    #                  num_layers=num_layers,
-    #                  hidden_size=hidden_size).to(device)
-    # model.load_state_dict(torch.load("./models/model-epoch-30.ckpt"),strict=False)
-    #
-    # image_test(data_loader,model,log_dir,'30_kor')
+    data_loader = get_loader(
+        input_dir=input_dir,
+        input_vqa_train='train.npy',
+        input_vqa_valid='test.npy',
+        max_qst_length=max_qst_length,
+        max_num_ans=max_num_ans,
+        batch_size=batch_size,
+        num_workers=num_workers)
+
+    qst_vocab_size = data_loader['train'].dataset.qst_vocab.vocab_size
+    ans_vocab_size = data_loader['train'].dataset.ans_vocab.vocab_size
+    cap_vocab_size = data_loader['train'].dataset.cap_vocab.vocab_size
+
+    model = VqaModel(embed_size=embed_size,
+                     qst_vocab_size=qst_vocab_size,
+                     ans_vocab_size=ans_vocab_size,
+                   #  cap_vocab_size = cap_vocab_size,
+                     word_embed_size=word_embed_size,
+                     num_layers=num_layers,
+                     hidden_size=hidden_size).to(device)
+    model.load_state_dict(torch.load("./logs/221006/model-epoch-30.ckpt"),strict=False)
+
+    image_test(data_loader,model,log_dir,'30_kor')
 
 
     # print( VqaModel(

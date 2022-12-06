@@ -8,23 +8,24 @@ class Network(nn.Module):
     def __init__(self):
 
         super(Network, self).__init__()
-        #self.Resnet18 = resnet18()
-        self.Resnet18 = models.resnet18(pretrained=True)
-        self.Resnet18.fc =nn.Linear(512,7)
-        #self.Resnet18.fc = nn.Identity()
-        self.Resnet18.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
+        self.Resnet34 = models.resnet34(pretrained=True)
+        self.Resnet34.fc =nn.Linear(512,7)
+        self.Resnet34.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
+
+        self.resnet18 = models.resnet18()
+        self.resnet18.fc = nn.Identity()
 
         self.localization = nn.Sequential(
-            nn.Conv2d(1, 8, kernel_size=1),
+            nn.Conv2d(1, 8, kernel_size=7),
             nn.MaxPool2d(2, stride=2),
             nn.ReLU(True),
             nn.Conv2d(8, 10, kernel_size=5),
             nn.MaxPool2d(2, stride=2),
-            nn.ReLU(True),
+            nn.ReLU(True)
         )
 
         self.fc_loc = nn.Sequential(
-            nn.Linear(110, 32),
+            nn.Linear(108, 32),
             nn.ReLU(True),
             nn.Linear(32, 3 * 2)
         )
@@ -33,10 +34,8 @@ class Network(nn.Module):
 
     def stn(self, x):
         xs = self.localization(x)
-        xs = F.dropout(xs)
         print(xs.shape)
-        xs = xs.view(-1,110)
-        print(xs.shape)
+        xs = xs.view(-1,108)
         theta = self.fc_loc(xs)
         theta = theta.view(-1, 2, 3)
 
@@ -46,7 +45,9 @@ class Network(nn.Module):
         return x
 
     def forward(self, x1,x2,x3):
-       # x = self.stn(x)
+       x1 = self.stn(x1)
+       x2 = self.stn(x2)
+       x3 = self.stn(x3)
        out1 = self.Resnet18(x1)
        out2 = self.Resnet18(x2)
        out3 = self.Resnet18(x3)

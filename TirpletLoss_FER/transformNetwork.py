@@ -9,9 +9,11 @@ class Network(nn.Module):
     def __init__(self):
 
         super(Network, self).__init__()
-        self.Resnet18 = resnet18()
+        self.Resnet18 = models.resnet18(pretrained=True)
+        #self.Resnet18.fc = nn.Identity()
+        self.Resnet18.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
         #self.Resnet18 = models.resnet18(pretrained=True)
-       # self.Resnet18.fc =nn.Linear(512,7)
+        self.Resnet18.fc =nn.Linear(512,7)
         #self.Resnet18.fc = nn.Identity()
         #self.Resnet18.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
 
@@ -67,3 +69,5 @@ def init_weights(m):
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = Network().to(device)
 summary(model, input_size=(1, 48, 48))
+
+resnet18()

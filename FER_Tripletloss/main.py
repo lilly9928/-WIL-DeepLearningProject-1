@@ -30,8 +30,8 @@ epochs =10
 learning_rate=0.1
 
 #data_aug
-train_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_train.csv")
-test_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_val.csv")
+train_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_train.csv")
+test_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_val.csv")
 
 color_jitter = transforms.ColorJitter(0.8 * 1, 0.8 * 1, 0.8 * 1, 0.2 * 1)
 

@@ -30,20 +30,30 @@ learning_rate=0.001
 embedding_dims = 2
 
 #data_aug
-train_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_train.csv")
-test_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_val.csv")
+train_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_train.csv")
+test_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_val.csv")
 
 transformation = transforms.Compose([transforms.ToTensor(),])
 
-train_ds = ImageData(train_df, train=True, transform=transformation)
+#data_aug
+train_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_train.csv")
+test_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_val.csv")
 
-test_ds = ImageData(test_df, train=False, transform=transformation)
+color_jitter = transforms.ColorJitter(0.8 * 1, 0.8 * 1, 0.8 * 1, 0.2 * 1)
+
+train_ds = ImageData(train_df,
+                 train=True,
+                 transform=transforms.Compose([
+                     transforms.ToTensor(),
+                     #transforms.RandomApply([color_jitter], p=0.8),
+                 ]))
+test_ds = ImageData(test_df, train=True, transform=transforms.Compose([
+                     transforms.ToTensor()
+                 ]))
 
 train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=0)
 
-test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=0)
-
-classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
+test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=True, num_workers=0)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = Network().to(device)

@@ -9,4 +9,4 @@ references = [
      'A girl in a bathing suit with a pink umbrella'
 ]
 
-print('패키지 NLTK의 BLEU :',bleu.sentence_bleu(list(map(lambda ref: ref.split(), references)),list(candidate.split()),weights=(1, 0, 0, 0)))
+print('패키지 NLTK의 BLEU :',bleu.sentence_bleu(list(map(lambda ref: ref.split(), references)),list(candidate.split()),weights=(0, 0, 0, 1)))

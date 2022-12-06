@@ -3,6 +3,8 @@ import random
 import numpy as np
 from torchvision import transforms
 from torch.utils.data import  Dataset
+from skimage import exposure
+from skimage.feature import hog
 
 class ImageData(Dataset):
 
@@ -13,15 +15,14 @@ class ImageData(Dataset):
 
         if self.is_train:
 
-            self.train_data = df['pixels']
-            self.train_label = df['emotion']
-            self.labels_set = self(self.train_label)
-
+            self.images = df['pixels']
+            self.labels = df['emotion']
+            self.index = df.index.values
 
         else:
             self.images = df['pixels']
             self.labels = df['emotion']
-
+            self.index = df.index.values
 
     def __len__(self):
         return len(self.images)
@@ -56,7 +57,7 @@ class ImageData(Dataset):
                 positive_img = self.transform(self.to_pil(positive_img))
                 negative_img = self.transform(self.to_pil(negative_img))
 
-            return (anchor_img, positive_img, negative_img), anchor_label
+            return anchor_img, positive_img, negative_img, anchor_label
 
         else:
             if self.transform:
