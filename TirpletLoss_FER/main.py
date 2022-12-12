@@ -12,16 +12,12 @@ import matplotlib.pyplot as plt
 import torchvision.utils
 from torchvision import transforms
 from torch.utils.data import DataLoader
-import os
 from imagedata import ImageData
-from torchsummary import summary
-from transformNetwork import Network, init_weights
-from tripletloss import TripletLoss
+from transformNetwork import Network, init_weights,ResNetMultiStn,Bottleneck
 from torch.utils.tensorboard import SummaryWriter
-from woResnet import Emotion
 from xgboost import XGBClassifier
-from torch.autograd import Variable
-import torch.nn.functional as F
+from raf_imagedata import RafDataset
+
 
 torch.cuda.empty_cache()
 
@@ -35,9 +31,9 @@ def imshow(img,text=None,should_save=False):
     plt.show()
 
 
-torch.manual_seed(2020)
-np.random.seed(2020)
-random.seed(2020)
+# torch.manual_seed(2020)
+# np.random.seed(2020)
+# random.seed(2020)
 
 
 #hyperparmeters
@@ -47,40 +43,39 @@ learning_rate=0.001
 embedding_dims = 2
 
 #data_aug
-train_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_train.csv")
-test_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_val.csv")
+train_csvdir = 'D:/data/FER/ck_images/ck_train.csv'
+traindir = "D:/data/FER/ck_images/Images/ck_train/"
+val_csvdir= 'D:/data/FER/ck_images/ck_val.csv'
+valdir = "D:/data/FER/ck_images/Images/ck_val/"
 
-color_jitter = transforms.ColorJitter(0.8 * 1, 0.8 * 1, 0.8 * 1, 0.2 * 1)
+eval_transforms = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])])
 
-train_ds = ImageData(train_df,
-                 train=True,
-                 transform=transforms.Compose([
-                     transforms.ToTensor(),
-                     #transforms.RandomApply([color_jitter], p=0.8),
-                    # transforms.RandomErasing(p=1, scale=(0.02, 0.33), ratio=(0.3, 3.3), value=0, inplace=False),
-                 ]))
-train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=0)
+transformation = transforms.Compose([transforms.ToTensor()])
+# train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+#
+# val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
+# val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
+#
 
+train_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='train', transform=eval_transforms)
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-test_ds = ImageData(test_df, train=False, transform=transforms.Compose([
-                     transforms.ToTensor()
-                 ]))
-test_loader = DataLoader(test_ds, batch_size=1, shuffle=True, num_workers=0)
-
-
-anchor,positive,negative,labels = next(iter(train_loader))
-
-anchor[0].shape
-torch_image = torch.squeeze(anchor[0])
-image = torch_image.numpy()
-print(anchor.shape)
+val_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='test', transform=eval_transforms)
+val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False)
 
 #device, model
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model = Network().to(device)
+model = ResNetMultiStn(Bottleneck, [3, 4, 6, 3]).to(device)
 model.apply(init_weights)
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-criterion =nn.TripletMarginLoss(margin=1.0, p=2)
+Triplet_criterion =nn.TripletMarginLoss(margin=1.0, p=2)
+criterion = nn.CrossEntropyLoss(reduction='sum')
 
 model.train()
 
@@ -104,19 +99,18 @@ for epoch in range(epochs):
 
         optimizer.zero_grad()
 
-        anchor_out = model(anchor_img)
-        positive_out = model(positive_img)
-        negative_out = model(negative_img)
+        anchor_feature,anchor_out = model(anchor_img)
+        positive_feature,positive_out = model(positive_img)
+        negative_feature,negative_out = model(negative_img)
 
 
-        img_grid = torchvision.utils.make_grid(anchor_img)
-        img_grid1 = torchvision.utils.make_grid(positive_img)
-        img_grid2 = torchvision.utils.make_grid(negative_img)
-        image_grid3 = torchvision.utils.make_grid(model.stn(anchor_img))
+        Triplet_loss = Triplet_criterion(anchor_feature, positive_feature, negative_feature)
+        entropy_loss=criterion(anchor_out,anchor_label)
 
+        loss = Triplet_loss+entropy_loss
 
-        loss = criterion(anchor_out, positive_out, negative_out)
         loss.backward()
+
         optimizer.step()
 
         running_loss.append(loss.cpu().detach().numpy())
@@ -125,18 +119,14 @@ for epoch in range(epochs):
         _, preds = torch.max(anchor_out, 1)
         train_correct += torch.sum(preds == anchor_label.data)
 
-        writer.add_image('anchor', img_grid)
-        writer.add_image('positive', img_grid1)
-        writer.add_image('negative', img_grid2)
-        writer.add_image('layer', image_grid3)
 
         #writer.add_embedding(features, metadata=class_labels, label_img=anchor_img,global_step=batch_idx)
 
-    train_acc = train_correct.double() / len(train_df)
+    train_acc = train_correct.double() / len(train_dataset)
     print(f'Mean Loss this epoch was {sum(running_loss) / len(running_loss)}')
     writer.add_scalar('Training Loss',sum(running_loss) / len(running_loss), global_step=epoch)
-    print("Epoch: {}/{} - Loss: {:.4f}".format(epoch + 1, epochs, np.mean(running_loss)))
-    #print("Epoch: {}/{} - Loss: {:.4f} Training Acuuarcy {:.3f}% ".format(epoch + 1, epochs, np.mean(running_loss),train_acc * 100))
+   # print("Epoch: {}/{} - Loss: {:.4f}".format(epoch + 1, epochs, np.mean(running_loss)))
+    print("Epoch: {}/{} - Loss: {:.4f} Training Acuuarcy {:.3f}% ".format(epoch + 1, epochs, np.mean(running_loss),train_acc * 100))
 
 torch.save(model.state_dict(),'train01.pt')
 #
@@ -178,7 +168,7 @@ test_labels = []
 
 model.eval()
 with torch.no_grad():
-    for img,label in test_loader:
+    for img,label in val_loader:
         img = img.to(device)
         test_results.append(model(img).cpu().numpy())
         test_labels.append(tree.predict(model(img).cpu().numpy()))
