@@ -4,8 +4,8 @@ import matplotlib
 
 orb = cv2.ORB()
 
-frame1 = cv2.imread('C:/Users/1315/Desktop/cal/2/img_1_00013.jpg')
-frame2 = cv2.imread('C:/Users/1315/Desktop/cal/2/img_2_00000.jpg')
+frame1 = cv2.imread('C:/Users/1315/Desktop/clean/cal/2/img_1_00013.jpg')
+frame2 = cv2.imread('C:/Users/1315/Desktop/clean/cal/2/img_2_00000.jpg')
 
 
 detector = cv2.ORB_create()

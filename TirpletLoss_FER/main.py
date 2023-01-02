@@ -71,7 +71,8 @@ val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=Fals
 
 #device, model
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model = ResNetMultiStn(Bottleneck, [3, 4, 6, 3]).to(device)
+#model = ResNetMultiStn(Bottleneck, [3, 4, 6, 3]).to(device)
+model = Network().to(device)
 model.apply(init_weights)
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 Triplet_criterion =nn.TripletMarginLoss(margin=1.0, p=2)

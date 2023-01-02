@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
+import os
 import cv2
 import torch.utils.data as data
 import torch
@@ -7,6 +10,7 @@ import pandas as pd
 import random
 import numpy as np
 from torchvision import transforms
+from skimage.feature import hog
 
 
 def generate_flip_grid(w, h, device):
@@ -63,6 +67,10 @@ class RafDataset(data.Dataset):
     def __getitem__(self, idx):
         label = self.label[idx]
         image = cv2.imread(self.file_paths[idx])
+        src = cv2.imread(self.file_paths[idx])
+        img = cv2.resize(src, (224, 224))
+        fd, hog_image = hog(img, orientations=24, pixels_per_cell=(16, 16),
+                            cells_per_block=(1, 1), visualize=True, channel_axis=-1)
 
         image = image[:, :, ::-1]
 
@@ -73,15 +81,15 @@ class RafDataset(data.Dataset):
 
         if self.phase == 'train':
             if self.basic_aug and random.uniform(0, 1) > 0.5:
-                image = self.aug_func[1](image)
+                hog_image = self.aug_func[1](hog_image)
 
         if self.transform is not None:
-            image = self.transform(image)
+            hog_image = self.transform(hog_image)
 
         # if self.clean:
         #     image1 = transforms.RandomHorizontalFlip(p=1)(image)
 
-        return image, label, idx
+        return hog_image, label, idx
 
 if __name__ == "__main__":
 
@@ -93,4 +101,4 @@ if __name__ == "__main__":
                              std=[0.229, 0.224, 0.225]),
         transforms.RandomErasing(scale=(0.02, 0.25))])
 
-    RafDataset(path='C:\\Users\\1315\\Desktop\\RAF\\compound',phase='train', transform=train_transforms)
+    RafDataset(path='D:\\data\\FER\\RAF\\basic',phase='train', transform=train_transforms)

@@ -1,3 +1,7 @@
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
+
 import torch
 import pandas as pd
 import random
@@ -7,6 +11,10 @@ from torchvision import transforms
 from torch.utils.data import  Dataset
 from skimage import exposure
 from skimage.feature import hog
+from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
+
+
 
 class ImageData(Dataset):
 
@@ -62,3 +70,33 @@ class ImageData(Dataset):
                 anchor_img = self.transform(img)
 
             return anchor_img,lables
+
+
+if __name__ == "__main__":
+
+    def imshow(img, text=None, should_save=False):
+        npimg = img.numpy()
+        plt.axis("off")
+        if text:
+            plt.text(75, 8, text, style='italic', fontweight='bold',
+                     bbox={'facecolor': 'white', 'alpha': 0.8, 'pad': 10})
+        plt.imshow(np.transpose(npimg, (1, 2, 0)))
+        plt.show()
+
+
+    train_csvdir = 'D:/data/FER/ck_images/ck_train.csv'
+    traindir = "D:/data/FER/ck_images/Images/ck_train/"
+    val_csvdir= 'D:/data/FER/ck_images/ck_val.csv'
+    valdir = "D:/data/FER/ck_images/Images/ck_val/"
+    batch_size = 8
+    transformation = transforms.Compose([transforms.ToTensor(),
+                                         transforms.RandomErasing(p=1, scale=(0.02, 0.33), ratio=(0.3, 3.3), value=0, inplace=False),])
+
+    train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+
+    for batch_idx, (anchor_img, positive_img, negative_img, anchor_label) in enumerate(train_loader):
+        imshow(anchor_img[0])
+        imshow(positive_img[0])
+        imshow(negative_img[0])
+        exit()

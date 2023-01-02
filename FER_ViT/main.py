@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import torchvision.models as models
 #from crossViT import CrossViT
 from myViT_one import ViT
+from raf_imagedata import RafDataset
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -37,18 +38,43 @@ model = ViT().to(device)
 
 summary(model, [(1, 256, 256)],device='cuda')
 
-#Load Data
-train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
-traindir = "C:/Users/1315/Desktop/data/ck_train/"
-val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
-valdir = "C:/Users/1315/Desktop/data/ck_val/"
-
-
-
+# #Load Data
+# train_csvdir= 'C:/Users/1315/Desktop/data/ck_train.csv'
+# traindir = "C:/Users/1315/Desktop/data/ck_train/"
+# val_csvdir= 'C:/Users/1315/Desktop/data/ck_val.csv'
+# valdir = "C:/Users/1315/Desktop/data/ck_val/"
+#
+#
+#
 transformation = Compose([ToTensor()])
+#
+# train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+# val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
 
-train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
-val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
+train_transforms = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    #transforms.Normalize((0.5611489, 0.44190985, 0.39697975), (0.21449453, 0.19619425, 0.18772252))
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                          std=[0.229, 0.224, 0.225]),
+    #transforms.RandomErasing(scale=(0.02, 0.25))
+    ])
+
+eval_transforms = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])])
+
+hog_transforms = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((224, 224)),
+    ])
+
+train_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='train', transform=transformation)
+val_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='test', transform=transformation)
 
 # make dataload
 train_dl = DataLoader(train_dataset, batch_size=8, shuffle=True)
@@ -137,7 +163,7 @@ def loss_epoch(model, loss_func, dataset_dl, sanity_check=False, opt=None):
     running_metric = 0.0
     len_data = len(dataset_dl.dataset)
 
-    for x1, yb in dataset_dl:
+    for x1, yb,_ in dataset_dl:
         x1 = x1.to(device).float()
         yb = yb.to(device)
         output = model(x1)
