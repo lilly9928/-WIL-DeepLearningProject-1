@@ -22,11 +22,11 @@ epochs =5
 learning_rate=0.001
 
 #data_aug
-train_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_train.csv")
-test_df = pd.read_csv("C:/Users/1315/Desktop/data/ck_val.csv")
+train_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_train.csv")
+test_df = pd.read_csv("C:/Users/1315/Desktop/clean/data/ck_val.csv")
 
 train_ds = ImageData(train_df,
-                 train=True,
+
                  transform=transforms.Compose([
                      transforms.ToTensor(),
                      transforms.RandomErasing(p=1, scale=(0.02, 0.33), ratio=(0.3, 3.3), value=0, inplace=False),
@@ -34,7 +34,7 @@ train_ds = ImageData(train_df,
 train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=0)
 
 
-test_ds = ImageData(test_df, train=False, transform=transforms.Compose([
+test_ds = ImageData(test_df,  transform=transforms.Compose([
                      transforms.ToTensor()
                  ]))
 test_loader = DataLoader(test_ds, batch_size=batch_size, shuffle=False, num_workers=0)
