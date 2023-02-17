@@ -146,17 +146,17 @@ if __name__ == "__main__":
        # transforms.RandomErasing(scale=(0.02, 0.25))
     ])
 
-    dataset=RafDataset(path='D:\\data\\FER\\RAF\\basic',phase='train', transform=train_transforms)
+    dataset=RafDataset(path='D:\\data\\FER\\RAF\\basic',phase='val', transform=train_transforms)
 
     grid_size=4
     rnd_ind = np.random.randint(0, len(dataset), grid_size)
 
-    print(dataset[rnd_ind[1]])
+    print(dataset[rnd_ind[1]][1])
 
     x_grid = [dataset[i][0] for i in rnd_ind]
     y_grid = [classes[dataset[i][1]] for i in rnd_ind]
 
     x_grid = torchvision.utils.make_grid(x_grid, nrow=grid_size, padding=2)
     plt.figure(figsize=(10,10))
-    show(x_grid, y_grid)
+    show(x_grid,y_grid)
     plt.show()
