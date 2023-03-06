@@ -17,9 +17,19 @@ from transformNetwork import Network, init_weights,ResNetMultiStn,Bottleneck
 from torch.utils.tensorboard import SummaryWriter
 from xgboost import XGBClassifier
 from raf_imagedata import RafDataset
+from fer_imagedata import FERimageData
 
 
 torch.cuda.empty_cache()
+
+import sys
+
+
+def printsave(*a):
+    file = open('D:\\GitHub\\-WIL-Expression-Recognition-Study\\TirpletLoss_FER', 'a')
+    print(*a)
+    print(*a, file=file)
+
 
 def imshow(img,text=None,should_save=False):
     npimg = img.numpy()
@@ -38,7 +48,7 @@ def imshow(img,text=None,should_save=False):
 
 #hyperparmeters
 batch_size = 8
-epochs =100
+epochs =0
 learning_rate=0.001
 embedding_dims = 2
 
@@ -48,6 +58,11 @@ traindir = "D:/data/FER/ck_images/Images/ck_train/"
 val_csvdir= 'D:/data/FER/ck_images/ck_val.csv'
 valdir = "D:/data/FER/ck_images/Images/ck_val/"
 
+fer_train_csvdir = 'D:/data/FER/train.csv'
+fer_traindir = "D:/data/FER/train/"
+fer_val_csvdir= 'D:/data/FER/val_1.csv'
+fer_valdir = "D:/data/FER/val_1/"
+
 eval_transforms = transforms.Compose([
     transforms.ToPILImage(),
     transforms.Resize((224, 224)),
@@ -56,13 +71,22 @@ eval_transforms = transforms.Compose([
                          std=[0.229, 0.224, 0.225])])
 
 transformation = transforms.Compose([transforms.ToTensor()])
-train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+
+#fer
+train_dataset =FERimageData(csv_file = fer_train_csvdir, img_dir = fer_traindir, datatype = 'train',transform = transformation)
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 
-val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
+val_dataset =FERimageData(csv_file = fer_val_csvdir, img_dir = fer_valdir, datatype = 'val_1',transform = transformation)
 val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
 
+#ck+
+# train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+#
+# val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
+# val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
 
+#raf
 # train_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='train', transform=eval_transforms)
 # train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 #
@@ -131,6 +155,8 @@ for epoch in range(epochs):
     writer.add_scalar('Training Loss',sum(running_loss) / len(running_loss), global_step=epoch)
    # print("Epoch: {}/{} - Loss: {:.4f}".format(epoch + 1, epochs, np.mean(running_loss)))
     print("Epoch: {}/{} - Loss: {:.4f} Training Acuuarcy {:.3f}% ".format(epoch + 1, epochs, np.mean(running_loss),train_acc * 100))
+    #printsave("Epoch: {}/{} - Loss: {:.4f} Training Acuuarcy {:.3f}% ".format(epoch + 1, epochs, np.mean(running_loss), train_acc * 100))
+
 
 torch.save(model.state_dict(),'train01.pt')
 #
@@ -154,9 +180,11 @@ def show(img, y=None):
     if y is not None:
         plt.title('labels:' + str(y))
 
+look_src = []
 with torch.no_grad():
-    for img,label in val_loader:
+    for img,src,label in val_loader:
         img = img.to(device)
+        look_src+=src
         gt = label
         _,out = model(img)
         _, predicted = torch.max(out, 1)
@@ -170,6 +198,12 @@ show(x_grid)
 plt.show()
 print('GT: ', ''.join(' %s' % classes[label[j]]for j in range(8)))
 print('Predicted: ', ''.join(' %s' % classes[predicted[j]]for j in range(8)))
+
+print(look_src)
+
+# printsave('GT: ', ''.join(' %s' % classes[label[j]]for j in range(8)))
+# printsave('Predicted: ', ''.join(' %s' % classes[predicted[j]]for j in range(8)))
+
 
 # imshow(torchvision.utils.make_grid(images))
 # print('GroundTruth: ', ''.join(' %s' % classes[labels[j]] for j in range(8)))
