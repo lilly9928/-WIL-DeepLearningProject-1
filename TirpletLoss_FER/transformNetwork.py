@@ -135,7 +135,7 @@ class StnFc975(nn.Module):
         x = self.fc1(feature)
         thetas = self.stn(feature)
         i = 0
-        theta = thetas[:, (i)*2:(i+1)*2]
+        theta = thetas[:, (i)*2:(i+1)*2] #thetas => feature 추출 값 n..?
         theta = theta.view(-1, 2, 1)
         crop_matrix = torch.tensor([[self.parallel[i], 0], [0, self.parallel[i]]], dtype=torch.float).cuda()
         crop_matrix = crop_matrix.repeat(theta.size(0), 1).reshape(theta.size(0), 2, 2)
@@ -226,69 +226,69 @@ class ResNetMultiStn(nn.Module):
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
-        x = self.maxpool(x)
+        x = self.maxpool(x) #64,112,112
 
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        feature = self.layer4(x)
+        feature = self.layer4(x) #512
 
         x = self.stn_fc(feature)
 
         return feature,x
 
-class Network(nn.Module):
-    def __init__(self):
-
-        super(Network, self).__init__()
-        self.Resnet18 = models.resnet34(pretrained=True)
-        #self.Resnet18.fc = nn.Identity()
-        self.Resnet18.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=3, bias=False)
-        #self.Resnet18.fc =nn.Linear(512,7)
-        self.Resnet18.fc = nn.Identity()
-        #self.Resnet18.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
-
-        self.fc1 = nn.Linear(512, 50)
-        self.fc2 = nn.Linear(50, 7)
-
-        self.localization = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=50, kernel_size=7),
-            nn.MaxPool2d(2, stride=2),
-            nn.ReLU(True),
-            nn.Conv2d(50, 100, kernel_size=5),
-            nn.MaxPool2d(2, stride=2),
-            nn.ReLU(True),
-        )
-
-        self.fc_loc = nn.Sequential(
-            nn.Linear(100*52*52, 100),
-            nn.ReLU(True),
-            nn.Linear(100, 3 * 2)
-        )
-        self.fc_loc[2].weight.data.zero_()
-        self.fc_loc[2].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
-
-    def stn(self, x):
-        xs = self.localization(x)
-        xs = F.dropout(xs)
-       # print(xs.shape)
-        xs = xs.view(-1,100*52*52)
-       # print(xs.shape)
-        theta = self.fc_loc(xs)
-        theta = theta.view(-1, 2, 3)
-
-        grid = F.affine_grid(theta, x.size())
-        x = F.grid_sample(x, grid)
-
-        return x
-
-    def forward(self, x):
-        x = self.stn(x)
-        feature = self.Resnet18(x)
-        out = self.fc1(feature)
-        out = self.fc2(out)
-
-        return feature,out
+# class Network(nn.Module):
+#     def __init__(self):
+#
+#         super(Network, self).__init__()
+#         self.Resnet18 = models.resnet34(pretrained=True)
+#         #self.Resnet18.fc = nn.Identity()
+#         self.Resnet18.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=3, bias=False)
+#         #self.Resnet18.fc =nn.Linear(512,7)
+#         self.Resnet18.fc = nn.Identity()
+#         #self.Resnet18.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
+#
+#         self.fc1 = nn.Linear(512, 50)
+#         self.fc2 = nn.Linear(50, 7)
+#
+#         self.localization = nn.Sequential(
+#             nn.Conv2d(in_channels=3, out_channels=50, kernel_size=7),
+#             nn.MaxPool2d(2, stride=2),
+#             nn.ReLU(True),
+#             nn.Conv2d(50, 100, kernel_size=5),
+#             nn.MaxPool2d(2, stride=2),
+#             nn.ReLU(True),
+#         )
+#
+#         self.fc_loc = nn.Sequential(
+#             nn.Linear(100*52*52, 100),
+#             nn.ReLU(True),
+#             nn.Linear(100, 3 * 2)
+#         )
+#         self.fc_loc[2].weight.data.zero_()
+#         self.fc_loc[2].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
+#
+#     def stn(self, x):
+#         xs = self.localization(x)
+#         xs = F.dropout(xs)
+#        # print(xs.shape)
+#         xs = xs.view(-1,100*52*52)
+#        # print(xs.shape)
+#         theta = self.fc_loc(xs)
+#         theta = theta.view(-1, 2, 3)
+#
+#         grid = F.affine_grid(theta, x.size())
+#         x = F.grid_sample(x, grid)
+#
+#         return x
+#
+#     def forward(self, x):
+#         x = self.stn(x)
+#         feature = self.Resnet18(x)
+#         out = self.fc1(feature)
+#         out = self.fc2(out)
+#
+#         return feature,out
 
 
 
@@ -299,5 +299,5 @@ def init_weights(m):
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = ResNetMultiStn(Bottleneck, [3, 4, 6, 3]).to(device)
-summary(model, input_size=(3, 224, 224))
+#summary(model, input_size=(3, 224, 224))
 

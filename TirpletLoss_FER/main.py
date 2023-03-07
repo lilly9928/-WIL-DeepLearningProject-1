@@ -13,11 +13,12 @@ import torchvision.utils
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from imagedata import ImageData
-from transformNetwork import Network, init_weights,ResNetMultiStn,Bottleneck
+from transformNetwork import init_weights,ResNetMultiStn,Bottleneck
 from torch.utils.tensorboard import SummaryWriter
 from xgboost import XGBClassifier
 from raf_imagedata import RafDataset
 from fer_imagedata import FERimageData
+from sklearn import metrics
 
 
 torch.cuda.empty_cache()
@@ -107,7 +108,7 @@ model.train()
 writer = SummaryWriter(f'runs/ck/MiniBatchsize {batch_size} LR {learning_rate}_220905')
 #writer = SummaryWriter(f'runs/FER/image_test')
 # ck+ class
-classes = ['Angry','Disgust','Fear','Happy','Sad','Surprise','Neutral']
+classes = ['AN','DI','FE','HA','SA','SU','NE']
 
 # classes = ['Surprise','Fear','Disgust','Happiness','Sadness','Anger','Neutral']
 
@@ -180,24 +181,40 @@ def show(img, y=None):
     if y is not None:
         plt.title('labels:' + str(y))
 
+
+
 look_src = []
+confusion_label=[]
+confusion_predicted=[]
+
+#test data
 with torch.no_grad():
     for img,src,label in val_loader:
+        look_src += src
         img = img.to(device)
-        look_src+=src
-        gt = label
+
         _,out = model(img)
         _, predicted = torch.max(out, 1)
 
+        confusion_label+=label
+        confusion_predicted+=predicted.cpu()
         x_grid = img
-
         break
 
+
 x_grid = torchvision.utils.make_grid(x_grid.cpu(), nrow=8, padding=2)
-show(x_grid)
+#show(x_grid)
+
+confusion_matrix = metrics.confusion_matrix(confusion_label, confusion_predicted)
+
+confusion_matrix_norm = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
+cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_norm,display_labels=classes)
+
+imshow(affine_grid)
+cm_display.plot()
 plt.show()
-print('GT: ', ''.join(' %s' % classes[label[j]]for j in range(8)))
-print('Predicted: ', ''.join(' %s' % classes[predicted[j]]for j in range(8)))
+print('GT: ', ''.join(' %s' % classes[confusion_label[j]]for j in range(8)))
+print('Predicted: ', ''.join(' %s' % classes[confusion_predicted[j]]for j in range(8)))
 
 print(look_src)
 

@@ -77,6 +77,28 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.main (1)">
+    <configuration name="confusion_matrics_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="-WIL-Expression-Recognition-Study" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Study" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Study/confusion_matrics_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="fer_imagedata" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="-WIL-Expression-Recognition-Study" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -143,29 +165,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="similarty" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="-WIL-Expression-Recognition-Study" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Study" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Study/similarty.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="tripletloss" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="transformNetwork" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="-WIL-Expression-Recognition-Study" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -178,7 +178,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TirpletLoss_FER/tripletloss.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/TirpletLoss_FER/transformNetwork.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -190,10 +190,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.transformNetwork" />
+        <item itemvalue="Python.confusion_matrics_test" />
         <item itemvalue="Python.fer_imagedata" />
         <item itemvalue="Python.raf_imagedata" />
-        <item itemvalue="Python.tripletloss" />
-        <item itemvalue="Python.similarty" />
       </list>
     </recent_temporary>
   </component>
@@ -221,7 +221,7 @@
       <workItem from="1674603880038" duration="3758000" />
       <workItem from="1676346475960" duration="13281000" />
       <workItem from="1676505944135" duration="17112000" />
-      <workItem from="1677731617249" duration="11238000" />
+      <workItem from="1677731617249" duration="20943000" />
     </task>
     <servers />
   </component>
@@ -503,19 +503,59 @@
           <option name="timeStamp" value="582" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/TirpletLoss_FER/main.py</url>
-          <line>184</line>
-          <option name="timeStamp" value="585" />
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="616" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>6</line>
+          <option name="timeStamp" value="617" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="618" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="619" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>10</line>
+          <option name="timeStamp" value="620" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>11</line>
+          <option name="timeStamp" value="621" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>12</line>
+          <option name="timeStamp" value="622" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Study/confusion_matrics_test.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="623" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/TirpletLoss_FER/main.py</url>
-          <line>185</line>
-          <option name="timeStamp" value="586" />
+          <line>196</line>
+          <option name="timeStamp" value="641" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/TirpletLoss_FER/main.py</url>
-          <line>187</line>
-          <option name="timeStamp" value="587" />
+          <line>195</line>
+          <option name="timeStamp" value="642" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/TirpletLoss_FER/main.py</url>
+          <line>198</line>
+          <option name="timeStamp" value="643" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -538,15 +578,16 @@
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main_0427.coverage" NAME="main_0427 Coverage Results" MODIFIED="1672989794167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration_parm.coverage" NAME="calibration_parm Coverage Results" MODIFIED="1671630409757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$imagedata.coverage" NAME="imagedata Coverage Results" MODIFIED="1671097474614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
-    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$transformNetwork.coverage" NAME="transformNetwork Coverage Results" MODIFIED="1670466418704" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$solvepnp_test.coverage" NAME="solvepnp_test Coverage Results" MODIFIED="1671532214576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$transformNetwork.coverage" NAME="transformNetwork Coverage Results" MODIFIED="1678154341174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$test.coverage" NAME="test Coverage Results" MODIFIED="1669811346318" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FER_Tripletloss" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main.coverage" NAME="main Coverage Results" MODIFIED="1672382560521" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FER_ViT" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration2.coverage" NAME="calibration2 Coverage Results" MODIFIED="1671533477564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$tripletloss.coverage" NAME="tripletloss Coverage Results" MODIFIED="1675069654741" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
-    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1678083637704" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1678154932744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$similarty.coverage" NAME="similarty Coverage Results" MODIFIED="1674623511449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$edge_dection.coverage" NAME="edge_dection Coverage Results" MODIFIED="1672131885073" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/image_denoising" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$confusion_matrics_test.coverage" NAME="confusion_matrics_test Coverage Results" MODIFIED="1678086969114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration3.coverage" NAME="calibration3 Coverage Results" MODIFIED="1671532824216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$dataloader.coverage" NAME="dataloader Coverage Results" MODIFIED="1671716737019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/image_denoising" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main__2_.coverage" NAME="main (2) Coverage Results" MODIFIED="1669811471729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FER_Tripletloss" />
