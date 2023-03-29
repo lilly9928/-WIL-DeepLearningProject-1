@@ -89,7 +89,6 @@ def main():
                 model.train()
             else:
                 model.eval()
-                # vaild일 경우 model.eval() -> 이함수도 찾아볼것
 
             #데이터로더에서 batch_idx, batch_sample가져옴
             for batch_idx, batch_sample in enumerate(data_loader[phase]):
