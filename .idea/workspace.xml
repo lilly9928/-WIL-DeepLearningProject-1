@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b7c691f2-c340-4eb3-83f7-c07f19867505" name="Changes" comment="" />
+    <list default="true" id="b7c691f2-c340-4eb3-83f7-c07f19867505" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Study/mplug_study.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/-WIL-Expression-Recognition-Study.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/-WIL-Expression-Recognition-Study.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/logs/train-log-epoch-01.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/logs/train-log-epoch-01.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/logs/train-log-epoch-02.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/logs/train-log-epoch-02.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/logs/train-log-epoch-03.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/logs/train-log-epoch-03.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/logs/valid-log-epoch-01.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/logs/valid-log-epoch-01.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/logs/valid-log-epoch-02.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/logs/valid-log-epoch-02.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/logs/valid-log-epoch-03.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/logs/valid-log-epoch-03.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VQA/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,7 +141,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/TirpletLoss_FER" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Mask_VQA" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -647,8 +659,26 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration3.coverage" NAME="calibration3 Coverage Results" MODIFIED="1671532824216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$fer_imagedata.coverage" NAME="fer_imagedata Coverage Results" MODIFIED="1676606890229" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration.coverage" NAME="calibration Coverage Results" MODIFIED="1673333229431" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$test.coverage" NAME="test Coverage Results" MODIFIED="1669811346318" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FER_Tripletloss" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$confusion_matrics_test.coverage" NAME="confusion_matrics_test Coverage Results" MODIFIED="1678086969114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration2.coverage" NAME="calibration2 Coverage Results" MODIFIED="1671533477564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$fundamentalMatrix.coverage" NAME="fundamentalMatrix Coverage Results" MODIFIED="1671533406505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$network.coverage" NAME="network Coverage Results" MODIFIED="1669812838549" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FER_Tripletloss" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$edge_dection.coverage" NAME="edge_dection Coverage Results" MODIFIED="1672131885073" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/image_denoising" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main_0427.coverage" NAME="main_0427 Coverage Results" MODIFIED="1672989794167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$transformNetwork.coverage" NAME="transformNetwork Coverage Results" MODIFIED="1678154341174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$auto_encoder.coverage" NAME="auto_encoder Coverage Results" MODIFIED="1672130717484" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/image_denoising" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$imagedata.coverage" NAME="imagedata Coverage Results" MODIFIED="1671097474614" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$mplug_study.coverage" NAME="mplug_study Coverage Results" MODIFIED="1679638199301" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$similarty.coverage" NAME="similarty Coverage Results" MODIFIED="1674623511449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$dataloader.coverage" NAME="dataloader Coverage Results" MODIFIED="1671716737019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/image_denoising" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main.coverage" NAME="main Coverage Results" MODIFIED="1678927124293" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/VQA" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$tripletloss.coverage" NAME="tripletloss Coverage Results" MODIFIED="1675069654741" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1678259600026" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
+    <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$calibration_parm.coverage" NAME="calibration_parm Coverage Results" MODIFIED="1671630409757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$fundamental.coverage" NAME="fundamental Coverage Results" MODIFIED="1671630403007" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Study/calibration" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$raf_imagedata.coverage" NAME="raf_imagedata Coverage Results" MODIFIED="1676442773201" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/TirpletLoss_FER" />
     <SUITE FILE_PATH="coverage/_WIL_Expression_Recognition_Study$network.coverage" NAME="network Coverage Results" MODIFIED="1669812838549" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/FER_Tripletloss" />
