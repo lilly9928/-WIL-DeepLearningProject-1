@@ -4,6 +4,12 @@ import torch.nn.functional as F
 from resnet import resnet18
 import torchvision.models as models
 from torchsummary import summary
+from imagedata import ImageData
+from torch.utils.data import DataLoader
+from torchvision import transforms
+from torchvision.transforms.functional import to_pil_image
+import matplotlib.pyplot as plt
+import torch.optim as optim
 
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
@@ -133,15 +139,15 @@ class StnFc975(nn.Module):
 
     def forward(self, feature):
         x = self.fc1(feature)
-        thetas = self.stn(feature)
+        thetas = self.stn(feature) # theta 값 추출
         i = 0
-        theta = thetas[:, (i)*2:(i+1)*2] #thetas => feature 추출 값 n..?
+        theta = thetas[:, (i)*2:(i+1)*2]
         theta = theta.view(-1, 2, 1)
         crop_matrix = torch.tensor([[self.parallel[i], 0], [0, self.parallel[i]]], dtype=torch.float).cuda()
         crop_matrix = crop_matrix.repeat(theta.size(0), 1).reshape(theta.size(0), 2, 2)
-        theta = torch.cat((crop_matrix, theta), dim=2)
-        grid = F.affine_grid(theta, feature.size())
-        xs = F.grid_sample(feature, grid)
+        theta = torch.cat((crop_matrix, theta), dim=2) #[1,2,3]
+        grid = F.affine_grid(theta, feature.size()) #[n,h,w,2] 2,7,7
+        xs = F.grid_sample(feature, grid) #channel 2048
         x += self.fc2(xs)
         i += 1
 
@@ -167,10 +173,10 @@ class StnFc975(nn.Module):
         return x
 
 
-class ResNetMultiStn(nn.Module):
+class Network(nn.Module):
 
     def __init__(self, block, layers, num_classes=7, zero_init_residual=False, p=0, parallel=[0.9, 0.7, 0.5]):
-        super(ResNetMultiStn, self).__init__()
+        super(Network, self).__init__()
         self.inplanes = 64
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
@@ -187,8 +193,6 @@ class ResNetMultiStn(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2)
         # [512, 14, 14]
         self.stn_fc = StnFc975(parallel, 512 * block.expansion, num_classes)
-        #         self.stn_fc = StnFc8642(parallel, 512 * block.expansion, num_classes)
-
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
@@ -223,81 +227,65 @@ class ResNetMultiStn(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.maxpool(x) #64,112,112
+        out = self.conv1(x) #input [2,3,244,244] output [2,64,112,112]
+        out = self.bn1(out) #output [2,64,112,112]
+        out = self.relu(out) #output [2,64,112,112]
+        out = self.maxpool(out) #[2,64,56,56]
 
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        feature = self.layer4(x) #512
+        out = self.layer1(out) #[2,256,56,56]
+        out = self.layer2(out) #[2,512,28,28]
+        out = self.layer3(out)#[2,1024,14,14]
+        feature = self.layer4(out) #512
 
-        x = self.stn_fc(feature)
-
-        return feature,x
-
-# class Network(nn.Module):
-#     def __init__(self):
-#
-#         super(Network, self).__init__()
-#         self.Resnet18 = models.resnet34(pretrained=True)
-#         #self.Resnet18.fc = nn.Identity()
-#         self.Resnet18.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=3, bias=False)
-#         #self.Resnet18.fc =nn.Linear(512,7)
-#         self.Resnet18.fc = nn.Identity()
-#         #self.Resnet18.conv1 = nn.Conv2d(1, 64, kernel_size=3, stride=2, padding=3, bias=False)
-#
-#         self.fc1 = nn.Linear(512, 50)
-#         self.fc2 = nn.Linear(50, 7)
-#
-#         self.localization = nn.Sequential(
-#             nn.Conv2d(in_channels=3, out_channels=50, kernel_size=7),
-#             nn.MaxPool2d(2, stride=2),
-#             nn.ReLU(True),
-#             nn.Conv2d(50, 100, kernel_size=5),
-#             nn.MaxPool2d(2, stride=2),
-#             nn.ReLU(True),
-#         )
-#
-#         self.fc_loc = nn.Sequential(
-#             nn.Linear(100*52*52, 100),
-#             nn.ReLU(True),
-#             nn.Linear(100, 3 * 2)
-#         )
-#         self.fc_loc[2].weight.data.zero_()
-#         self.fc_loc[2].bias.data.copy_(torch.tensor([1, 0, 0, 0, 1, 0], dtype=torch.float))
-#
-#     def stn(self, x):
-#         xs = self.localization(x)
-#         xs = F.dropout(xs)
-#        # print(xs.shape)
-#         xs = xs.view(-1,100*52*52)
-#        # print(xs.shape)
-#         theta = self.fc_loc(xs)
-#         theta = theta.view(-1, 2, 3)
-#
-#         grid = F.affine_grid(theta, x.size())
-#         x = F.grid_sample(x, grid)
-#
-#         return x
-#
-#     def forward(self, x):
-#         x = self.stn(x)
-#         feature = self.Resnet18(x)
-#         out = self.fc1(feature)
-#         out = self.fc2(out)
-#
-#         return feature,out
-
-
+        out = self.stn_fc(feature)
+        return feature,out
 
 def init_weights(m):
     if isinstance(m, nn.Conv2d):
         torch.nn.init.kaiming_normal_(m.weight)
 
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model = ResNetMultiStn(Bottleneck, [3, 4, 6, 3]).to(device)
-#summary(model, input_size=(3, 224, 224))
+if __name__ == '__main__':
+
+    # data_aug
+    train_csvdir = 'D:/data/FER/ck_images/ck_train.csv'
+    traindir = "D:/data/FER/ck_images/Images/ck_train/"
+    val_csvdir = 'D:/data/FER/ck_images/ck_val.csv'
+    valdir = "D:/data/FER/ck_images/Images/ck_val/"
+
+    transformation = transforms.Compose([transforms.ToTensor()])
+
+    train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=1, shuffle=True)
+
+
+
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model = Network(Bottleneck, [3, 4, 6, 3]).to(device)
+
+    criterion = nn.CrossEntropyLoss(reduction='sum')
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+
+    # for epoch in range(1):
+    #     for batch_idx, (anchor_img, positive_img, negative_img, anchor_label) in enumerate(train_loader):
+    #         # get data_aug to cuda
+    #         anchor_img, positive_img, negative_img = \
+    #             anchor_img.to(device), positive_img.to(device), negative_img.to(device)
+    #
+    #
+    #         anchor_label = anchor_label.to(device)
+    #
+    #         optimizer.zero_grad()
+    #
+    #         anchor_feature, anchor_out = model(anchor_img)
+    #         entropy_loss = criterion(anchor_out, anchor_label)
+    #         loss = entropy_loss
+    #
+    #         loss.backward()
+    #         optimizer.step()
+    #         _, preds = torch.max(anchor_out, 1)
+
+
+    summary(model, input_size=(3, 224, 224))
 

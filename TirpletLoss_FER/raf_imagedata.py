@@ -107,10 +107,11 @@ class RafDataset(data.Dataset):
                 return image, positive_image, negative_image, label
 
         else:
+
             if self.transform is not None:
                 image = self.transform(image)
 
-            return image,label
+            return image, self.file_paths,label
 
 
         # if self.clean:
