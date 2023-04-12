@@ -122,3 +122,6 @@ CenterLoss_FER/images/epoch=99.jpg
 *.xml
 *.json
 *.txt
+*.txt
+*.txt
+*.txt
