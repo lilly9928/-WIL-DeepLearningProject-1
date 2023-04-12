@@ -66,10 +66,11 @@ class ImageData(Dataset):
             return anchor_img, positive_img, negative_img, lables
 
         else:
+            srcc = self.img_dir + self.datatype + str(idx) + '.jpg'
             if self.transform: #val 데이터 일 경우
                 anchor_img = self.transform(img)
 
-            return anchor_img,lables
+            return anchor_img,srcc,lables
 
 
 if __name__ == "__main__":

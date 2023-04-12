@@ -50,11 +50,11 @@ for i, filter in enumerate(model_weights[0]):
     plt.subplot(8, 8, i+1) # (8, 8) because in conv0 we have 7x7 filters and total of 64 (see printed shapes)
     plt.imshow(filter[0, :, :].detach(), cmap='gray')
     plt.axis('off')
-    plt.savefig('C:/Users/1315/Desktop/test/filter.png')
+    plt.savefig('C:/Users/1315/Desktop/clean/test/filter.png')
 plt.show()
 
 # read and visualize an image
-img = cv.imread('C:/Users/1315/Desktop/test/dog.jpg')
+img = cv.imread('C:/Users/1315/Desktop/clean/test/dog.jpg')
 img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
 plt.imshow(img)
 plt.show()

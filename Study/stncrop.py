@@ -114,7 +114,7 @@ def train(epoch):
 #
 
 
-def test():
+def traintest():
     with torch.no_grad():
         model.eval()
         test_loss = 0
@@ -171,7 +171,7 @@ def visualize_stn():
 
 for epoch in range(1, 20 + 1):
     train(epoch)
-    test()
+    #testt()
 
 # 일부 입력 배치 데이터에서 STN 변환 결과를 시각화
 visualize_stn()

@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from resnet import resnet18
+from torchsummary import summary
 
 class Network(nn.Module):
     def __init__(self):
@@ -39,8 +40,8 @@ class Network(nn.Module):
         return x
 
     def forward(self, x):
-       # out = self.stn(x)
-        out = self.Resnet18(x)
+        out = self.stn(x)
+        #out = self.Resnet18(x)
 
         return out
 
@@ -48,3 +49,8 @@ class Network(nn.Module):
 def init_weights(m):
     if isinstance(m, nn.Conv2d):
         torch.nn.init.kaiming_normal_(m.weight)
+
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model = Network().to(device)
+summary(model, input_size=(1, 224, 224))

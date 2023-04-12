@@ -13,12 +13,14 @@ import torchvision.utils
 from torchvision import transforms
 from torch.utils.data import DataLoader
 from imagedata import ImageData
-from transformNetwork import init_weights,ResNetMultiStn,Bottleneck
+from transformNetwork import init_weights,Network,Bottleneck
 from torch.utils.tensorboard import SummaryWriter
-from xgboost import XGBClassifier
-from raf_imagedata import RafDataset
+from torch.autograd import Variable
 from fer_imagedata import FERimageData
+from raf_imagedata import RafDataset
 from sklearn import metrics
+from torch.nn import functional as F
+import skimage.transform
 
 
 torch.cuda.empty_cache()
@@ -49,11 +51,10 @@ def imshow(img,text=None,should_save=False):
 
 #hyperparmeters
 batch_size = 8
-epochs =0
+epochs =100
 learning_rate=0.001
 embedding_dims = 2
 
-#data_aug
 train_csvdir = 'D:/data/FER/ck_images/ck_train.csv'
 traindir = "D:/data/FER/ck_images/Images/ck_train/"
 val_csvdir= 'D:/data/FER/ck_images/ck_val.csv'
@@ -74,30 +75,29 @@ eval_transforms = transforms.Compose([
 transformation = transforms.Compose([transforms.ToTensor()])
 
 #fer
-train_dataset =FERimageData(csv_file = fer_train_csvdir, img_dir = fer_traindir, datatype = 'train',transform = transformation)
-train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-
-val_dataset =FERimageData(csv_file = fer_val_csvdir, img_dir = fer_valdir, datatype = 'val_1',transform = transformation)
-val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
+# train_dataset =FERimageData(csv_file = fer_train_csvdir, img_dir = fer_traindir, datatype = 'train',transform = transformation)
+# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+#
+# val_dataset =FERimageData(csv_file = fer_val_csvdir, img_dir = fer_valdir, datatype = 'val_1',transform = transformation)
+# val_loader = DataLoader(dataset=val_dataset, batch_size=1, shuffle=True)
 
 #ck+
 # train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
 # train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 #
 # val_dataset =ImageData(csv_file = val_csvdir, img_dir = valdir, datatype = 'ck_val',transform = transformation)
-# val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=True)
+# val_loader = DataLoader(dataset=val_dataset, batch_size=1, shuffle=True)
 
 #raf
-# train_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='train', transform=eval_transforms)
-# train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
-#
-# val_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='test', transform=eval_transforms)
-# val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False)
+train_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='train', transform=eval_transforms)
+train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+
+val_dataset= RafDataset(path='D:\\data\\FER\\RAF\\basic', phase='test', transform=eval_transforms)
+val_loader = DataLoader(dataset=val_dataset, batch_size=1, shuffle=False)
 
 #device, model
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model = ResNetMultiStn(Bottleneck, [3, 4, 6, 3]).to(device)
-#model = Network().to(device)
+model = Network(Bottleneck, [3, 4, 6, 3]).to(device)
 model.apply(init_weights)
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 Triplet_criterion =nn.TripletMarginLoss(margin=1.0, p=2)
@@ -108,9 +108,9 @@ model.train()
 writer = SummaryWriter(f'runs/ck/MiniBatchsize {batch_size} LR {learning_rate}_220905')
 #writer = SummaryWriter(f'runs/FER/image_test')
 # ck+ class
-classes = ['AN','DI','FE','HA','SA','SU','NE']
+#classes = ['AN','DI','FE','HA','SA','SU','NE']
 
-# classes = ['Surprise','Fear','Disgust','Happiness','Sadness','Anger','Neutral']
+classes = ['SU','FE','DI','HA','SA','AN','NE']
 
 
 for epoch in range(epochs):
@@ -181,112 +181,68 @@ def show(img, y=None):
     if y is not None:
         plt.title('labels:' + str(y))
 
+class SaveFeatures():
+    features=None
+    def __init__(self, m): self.hook = m.register_forward_hook(self.hook_fn)
+    def hook_fn(self, module, input, output): self.features = ((output.cpu()).data).numpy()
+    def remove(self): self.hook.remove()
+
+
+def getCAM(feature_conv, weight_fc):
+    _, nc, h, w = feature_conv.shape
+    cam = weight_fc[0].dot(feature_conv.reshape((nc, h*w)))
+    cam = cam.reshape(h, w)
+    cam = cam - np.min(cam)
+    cam_img = cam / np.max(cam)
+    return [cam_img]
 
 
 look_src = []
 confusion_label=[]
 confusion_predicted=[]
 
+display_transform = transforms.Compose([
+   transforms.Resize((224,224))])
+
+flag = 0
 #test data
 with torch.no_grad():
     for img,src,label in val_loader:
         look_src += src
         img = img.to(device)
+        prediction_var = Variable((img.unsqueeze(0)).cuda(), requires_grad=True)
 
-        _,out = model(img)
+        final_layer = model._modules.get('layer4')
+        activated_features = SaveFeatures(final_layer)
+
+        feature,out = model(img)
         _, predicted = torch.max(out, 1)
 
         confusion_label+=label
         confusion_predicted+=predicted.cpu()
         x_grid = img
-        break
 
+        if flag != 5:
+            weight_softmax_params = list(model._modules.get('stn_fc').parameters())
+            weight_softmax = np.squeeze(weight_softmax_params[0].cpu().data.numpy())
 
-x_grid = torchvision.utils.make_grid(x_grid.cpu(), nrow=8, padding=2)
-#show(x_grid)
+            overlay = getCAM(activated_features.features, weight_softmax)
+
+            plt.imshow(overlay[0], alpha=0.5, cmap='jet')
+            test = img.shape[2:4]
+            plt.imshow(torch.einsum("chw->hwc",img[0].cpu()))
+            plt.imshow(skimage.transform.resize(overlay[0],  img.shape[2:4]), alpha=0.5, cmap='jet')
+            plt.show()
+
+            flag += 1
 
 confusion_matrix = metrics.confusion_matrix(confusion_label, confusion_predicted)
 
 confusion_matrix_norm = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
 cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_norm,display_labels=classes)
 
-imshow(affine_grid)
-cm_display.plot()
+cm_display.plot(cmap=plt.cm.Blues)
 plt.show()
 print('GT: ', ''.join(' %s' % classes[confusion_label[j]]for j in range(8)))
 print('Predicted: ', ''.join(' %s' % classes[confusion_predicted[j]]for j in range(8)))
-
-print(look_src)
-
-# printsave('GT: ', ''.join(' %s' % classes[label[j]]for j in range(8)))
-# printsave('Predicted: ', ''.join(' %s' % classes[predicted[j]]for j in range(8)))
-
-
-# imshow(torchvision.utils.make_grid(images))
-# print('GroundTruth: ', ''.join(' %s' % classes[labels[j]] for j in range(8)))
-#
-# model.load_state_dict(torch.load('train01.pt'))
-# _,outputs = model(images)
-# _, predicted = torch.max(outputs, 1)
-#
-# print('Predicted: ', ''.join(' %s' % classes[predicted[j]]for j in range(8)))
-
-
-# with torch.no_grad():
-#     for img, _, _, label in train_loader:
-#         img, label = img.to(device), label.to(device)
-#         train_results.append(model(img))
-#         labels.append(label.cpu())
-#
-# train_results = np.concatenate(train_results)
-# labels = np.concatenate(labels)
-# labels.shape
-#
-# ## visualization
-# plt.figure(figsize=(15, 10), facecolor="azure")
-# for label in np.unique(labels):
-#     tmp = train_results[labels == label]
-#     plt.scatter(tmp[:, 0], tmp[:, 1], label=classes[label])
-#
-# plt.legend()
-# plt.show()
-#
-# tree = XGBClassifier(seed=180)
-# tree.fit(train_results, labels)
-#
-# test_results = []
-# test_labels = []
-#
-# model.eval()
-# with torch.no_grad():
-#     for img,label in val_loader:
-#         img = img.to(device)
-#         test_results.append(model(img).cpu().numpy())
-#         test_labels.append(tree.predict(model(img).cpu().numpy()))
-#
-# test_results = np.concatenate(test_results)
-# test_labels = np.concatenate(test_labels)
-#
-# plt.figure(figsize=(15, 10), facecolor="azure")
-# for label in np.unique(test_labels):
-#     tmp = test_results[test_labels == label]
-#     plt.scatter(tmp[:, 0], tmp[:, 1], label=classes[label])
-#
-# plt.legend()
-# plt.show()
-#
-# # accuracy
-# true_ = (tree.predict(test_results) == test_labels).sum()
-# len_ = len(test_labels)
-# print("Accuracy :{}%".format((true_ / len_) * 100))  ##100%
-
-# dataiter = iter(test_loader)
-# x0,_ = next(dataiter)
-#
-# for i in range(10):
-#     x1, label2 = next(dataiter)
-#     concatenated = torch.cat((x0, x1), 0)
-#
-#     output1, output2 = model(Variable(x0).cuda(), Variable(x1).cuda())
-#     euclidean_distance = F.pairwise_distance(output1, output2)
-#     imshow(torchvision.utils.make_grid(concatenated), 'Dissimilarity: {:.2f}'.format(euclidean_distance.item()))
+print('src: ', ''.join(' %s' % look_src[j] for j in range(8)))
