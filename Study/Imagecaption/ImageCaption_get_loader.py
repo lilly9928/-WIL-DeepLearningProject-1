@@ -138,34 +138,34 @@ def get_loader(
 
 
 if __name__ == "__main__":
-    # transform = transforms.Compose(
-    #     [transforms.Resize((224, 224)), transforms.ToTensor(),]
-    # )
+    transform = transforms.Compose(
+        [transforms.Resize((224, 224)), transforms.ToTensor(),]
+    )
+
+    loader, dataset = get_loader(
+        "D:/data/vqa/coco/simple_vqa/Images/train2014/", "D:/data/vqa/coco/simple_vqa/captions.txt", transform=transform
+    )
+
+    for idx, (imgs, captions) in enumerate(loader):
+
+        print(imgs.shape)
+        print(captions.shape)
     #
-    # loader, dataset = get_loader(
-    #     "D:/data/vqa/coco/simple_vqa/Images/train2014/", "D:/data/vqa/coco/simple_vqa/captions.txt", transform=transform
-    # )
+    # df = pd.read_csv("D:/data/vqa/coco/simple_vqa/captions.txt")
     #
-    # for idx, (imgs, captions) in enumerate(loader):
+    # # Get img, caption columns
+    # imgs = df["image"]
+    # captions = df["caption"]
+    # print(df["image"].shape)
     #
-    #     print(imgs)
-    #     print(captions)
-
-    df = pd.read_csv("D:/data/vqa/coco/simple_vqa/captions.txt")
-
-    # Get img, caption columns
-    imgs = df["image"]
-    captions = df["caption"]
-    print(df["image"].shape)
-
-    for idx in range(len(imgs)):
-        if "jpg" not in imgs[idx]:
-            print(f"{idx}")
-            #del df[idx]
-            df= df.drop(216936)
-
-    print(df.shape)
-
-
-    df.to_csv('D:/data/vqa/coco/simple_vqa/captions.txt')
-
+    # for idx in range(len(imgs)):
+    #     if "jpg" not in imgs[idx]:
+    #         print(f"{idx}")
+    #         #del df[idx]
+    #         df= df.drop(216936)
+    #
+    # print(df.shape)
+    #
+    #
+    # df.to_csv('D:/data/vqa/coco/simple_vqa/captions.txt')
+    #

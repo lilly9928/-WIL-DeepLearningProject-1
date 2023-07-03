@@ -7,6 +7,7 @@ import numpy as np
 import os
 import argparse
 from PIL import Image
+import cv2
 
 
 def magnitude_spectrum(image):

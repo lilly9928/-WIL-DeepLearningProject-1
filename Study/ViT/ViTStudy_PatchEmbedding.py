@@ -29,7 +29,7 @@ print('patches:', patches.shape)
 
 patch_size = 16
 in_channels = 1
-emb_size = 768 # patch_size
+emb_size = 256 # patch_size
 
 projection = nn.Sequential(nn.Conv2d(in_channels,emb_size,kernel_size=patch_size,stride=patch_size),Rearrange('b e (h) (w) -> b (h w) e '))
 print('usedCov2d_patches:',projection(x).shape)
@@ -48,7 +48,7 @@ cls_token = nn.Parameter(torch.randn(1,1,emb_size)) #number placed in from of ea
 position = nn.Parameter(torch.randn((img_size//patch_size) **2 + 1, emb_size)) #spatial information.
 print('Cls Shape: ', cls_token.shape, 'Pos Shape:', position.shape)
 
-#cls_token 반복하여 배치 사이즈의 크기 맞추기 
+#cls_token 반복하여 배치 사이즈의 크기 맞추기
 batch_size = 8
 cls_tokens = repeat(cls_token,'() n e -> b n e',b = batch_size)
 print('Repeat Cls shape: ', cls_tokens.shape)

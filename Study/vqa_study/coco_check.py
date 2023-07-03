@@ -54,7 +54,7 @@ plt.savefig("mygraph.png")
 # coco_kps.showAnns(anns)
 
 # initialize COCO api for caption annotations
-annFile = '{}/Annotations/annotations/captions_{}.json'.format(dataDir,dataType)
+annFile = '{}/Annotations/annotations/caption/captions_{}.json'.format(dataDir,dataType)
 coco_caps=COCO(annFile)
 
 # load and display caption annotations

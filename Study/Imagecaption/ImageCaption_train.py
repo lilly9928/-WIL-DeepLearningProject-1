@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision.transforms as transforms
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 from ImageCaption_utils import save_checkpoint, load_checkpoint, print_examples
 from ImageCaption_get_loader import get_loader
 from ImageCaption_model import CNNtoRNN
@@ -39,7 +39,7 @@ def train():
 
     #for tensorboard
 
-    writer = SummaryWriter("../runs/coco")
+    #writer = SummaryWriter("../runs/coco")
     step = 0
 
     #initialize model , loss etc
@@ -68,6 +68,10 @@ def train():
             captions = captions.to(device)
 
             outputs = model(imgs,captions[:-1])
+            print(outputs.shape)
+            print(captions.shape)
+            print(outputs.reshape(-1,outputs.shape[2]).shape)
+            print(captions.reshape(-1).shape)
             loss = criterion(outputs.reshape(-1,outputs.shape[2]),captions.reshape(-1))
 
             #print("Training loss", loss.item())

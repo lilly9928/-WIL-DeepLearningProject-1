@@ -125,3 +125,10 @@ CenterLoss_FER/images/epoch=99.jpg
 *.txt
 *.txt
 *.txt
+*.pyd
+*.cmake
+*.dll
+*.dat
+*.css
+*.zip
+*.exe
