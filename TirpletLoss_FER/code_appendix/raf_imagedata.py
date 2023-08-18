@@ -9,11 +9,7 @@ import torch
 import pandas as pd
 import random
 import numpy as np
-from torchvision import transforms
-from skimage.feature import hog
-import matplotlib.pyplot as plt
-import torchvision
-from skimage import exposure
+
 
 
 def generate_flip_grid(w, h, device):
@@ -76,11 +72,6 @@ class RafDataset(data.Dataset):
         image = image[:, :, ::-1]
 
 
-        # if not self.clean:
-        #     image1 = image
-        #     image1 = self.aug_func[0](image)
-        #     image1 = self.transform(image1)
-
         if self.phase == 'train':
             positive_list =self.index[self.index!=idx][self.label[self.index!=idx]==int(label)]
             positive_item = random.choice(positive_list)
@@ -89,15 +80,7 @@ class RafDataset(data.Dataset):
             negative_list=self.index[self.index!=idx][self.label[self.index != idx]!= int(label)]
             negative_item = random.choice(negative_list)
             negative_image = cv2.imread(self.file_paths[negative_item])
-        #??
-        # if self.phase == 'train':
-        #     if self.basic_aug and random.uniform(0, 1) > 0.5:
-        #         image = self.aug_func[1](image)
 
-        # if self.phase == 'train' or self.phase == 'test':
-        #    fd,image = hog(image, orientations=24, pixels_per_cell=(16, 16),
-        #                cells_per_block=(1, 1), visualize=True, channel_axis=-1)
-        #    image = exposure.rescale_intensity(image, in_range=(0, 10))
 
             if self.transform is not None:
                 image = self.transform(image)
@@ -114,50 +97,4 @@ class RafDataset(data.Dataset):
             return image, self.file_paths,label
 
 
-        # if self.clean:
-        #     image1 = transforms.RandomHorizontalFlip(p=1)(image)
-
         return image, positive_image, negative_image, label
-
-if __name__ == "__main__":
-   #check sample images
-    def show(img, y=None):
-        npimg = img.numpy()
-        npimg_tr = np.transpose(npimg, (1, 2, 0))
-        plt.imshow(npimg_tr)
-
-        if y is not None:
-            plt.title('labels:' + str(y))
-
-#compound
-    # classes = ['Happily Surprised', 'Happily Disgusted', 'Sadly Fearful', 'Sadly Angry', 'Sadly Surprised',
-    #            'Sadly Disgusted', 'Fearfully Angry',
-    #            'Fearfully Surprised', 'Angrily Surprised', 'Angrily Disgusted', 'Disgustedly Surprised']
-
-   #basic
-    classes = [ 'Surprise', 'Fear','Disgust','Happiness','Sadness','Anger','Neutral']
-
-    train_transforms = transforms.Compose([
-        transforms.ToPILImage(),
-       # transforms.Resize((224, 224)),
-        transforms.ToTensor(),
-        transforms.Resize((224, 224)),
-       # transforms.Normalize(mean=[0.485, 0.456, 0.406],
-       #                      std=[0.229, 0.224, 0.225]),
-       # transforms.RandomErasing(scale=(0.02, 0.25))
-    ])
-
-    dataset=RafDataset(path='D:\\data\\FER\\RAF\\basic',phase='val', transform=train_transforms)
-
-    grid_size=4
-    rnd_ind = np.random.randint(0, len(dataset), grid_size)
-
-    print(dataset[rnd_ind[1]][1])
-
-    x_grid = [dataset[i][0] for i in rnd_ind]
-    y_grid = [classes[dataset[i][1]] for i in rnd_ind]
-
-    x_grid = torchvision.utils.make_grid(x_grid, nrow=grid_size, padding=2)
-    plt.figure(figsize=(10,10))
-    show(x_grid,y_grid)
-    plt.show()

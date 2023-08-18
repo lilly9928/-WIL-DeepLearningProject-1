@@ -92,7 +92,7 @@ class BasicStn(nn.Module):
         super(BasicStn, self).__init__()
         self.conv = conv1x1(in_feature, 128)
         self.fc_loc = nn.Sequential(
-            nn.Linear(128*7*7, 64),
+            nn.Linear(128*14*14, 64),
             nn.Tanh(),
             nn.Linear(64, 2*len(parallel)),
             nn.Tanh()
@@ -101,7 +101,7 @@ class BasicStn(nn.Module):
     def forward(self, x):
         x = self.conv(x)
        # print(x.shape)
-        x = x.view(-1, 128*7*7)
+        x = x.view(-1, 128*14*14)
         x = self.fc_loc(x)
         return x
 
@@ -187,7 +187,7 @@ class StnFc975(nn.Module):
 
 class Network(nn.Module):
 
-    def __init__(self, block, layers, num_classes=7, zero_init_residual=False, p=0, parallel=[0.9, 0.7, 0.5],num_layers=1):
+    def __init__(self, block, layers, num_classes=7, zero_init_residual=False, p=0, parallel=[0.5, 0.5, 0.5],num_layers=1):
         super(Network, self).__init__()
         self.inplanes = 64
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
@@ -239,7 +239,7 @@ class Network(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        out = self.conv1(x) #input [8,3,448,448] output [8,64,224,224]
+        out = self.conv1(x) #input [8,3,448,448]
         out = self.bn1(out) #output [2,64,224,224]
         out = self.relu(out) #output [2,64,224,224]
         out = self.maxpool(out) #[2,64,112,112]

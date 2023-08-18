@@ -1,15 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from resnet import resnet18
-import torchvision.models as models
-from torchsummary import summary
-from imagedata import ImageData
-from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision.transforms.functional import to_pil_image
-import matplotlib.pyplot as plt
-import torch.optim as optim
 
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
@@ -92,7 +83,7 @@ class BasicStn(nn.Module):
         super(BasicStn, self).__init__()
         self.conv = conv1x1(in_feature, 128)
         self.fc_loc = nn.Sequential(
-            nn.Linear(128*7*7, 64),
+            nn.Linear(128*14*14, 64),
             nn.Tanh(),
             nn.Linear(64, 2*len(parallel)),
             nn.Tanh()
@@ -101,7 +92,7 @@ class BasicStn(nn.Module):
     def forward(self, x):
         x = self.conv(x)
        # print(x.shape)
-        x = x.view(-1, 128*7*7)
+        x = x.view(-1, 128*14*14)
         x = self.fc_loc(x)
         return x
 
@@ -152,42 +143,12 @@ class StnFc975(nn.Module):
             xs = F.grid_sample(feature, grid,align_corners=True)  # channel 2048
             x += self.fc2(xs)
 
-
-        # theta = thetas[:, (i)*2:(i+1)*2]
-        # theta = theta.view(-1, 2, 1)
-        # crop_matrix = torch.tensor([[self.parallel[i], 0], [0, self.parallel[i]]], dtype=torch.float).cuda()
-        # crop_matrix = crop_matrix.repeat(theta.size(0), 1).reshape(theta.size(0), 2, 2)
-        # theta = torch.cat((crop_matrix, theta), dim=2) #[1,2,3]
-        # grid = F.affine_grid(theta, feature.size()) #[n,h,w,2] 2,7,7
-        # xs = F.grid_sample(feature, grid) #channel 2048
-        # x += self.fc2(xs)
-        # i += 1
-        #
-        # theta = thetas[:, (i)*2:(i+1)*2]
-        # theta = theta.view(-1, 2, 1)
-        # crop_matrix = torch.tensor([[self.parallel[i], 0], [0, self.parallel[i]]], dtype=torch.float).cuda()
-        # crop_matrix = crop_matrix.repeat(theta.size(0), 1).reshape(theta.size(0), 2, 2)
-        # theta = torch.cat((crop_matrix, theta), dim=2)
-        # grid = F.affine_grid(theta, feature.size())
-        # xs = F.grid_sample(feature, grid)
-        # x += self.fc3(xs)
-        # i += 1
-        #
-        # theta = thetas[:, (i)*2:(i+1)*2]
-        # theta = theta.view(-1, 2, 1)
-        # crop_matrix = torch.tensor([[self.parallel[i], 0], [0, self.parallel[i]]], dtype=torch.float).cuda()
-        # crop_matrix = crop_matrix.repeat(theta.size(0), 1).reshape(theta.size(0), 2, 2)
-        # theta = torch.cat((crop_matrix, theta), dim=2)
-        # grid = F.affine_grid(theta, feature.size())
-        # xs = F.grid_sample(feature, grid)
-        # x += self.fc4(xs)
-
         return x
 
 
 class Network(nn.Module):
 
-    def __init__(self, block, layers, num_classes=7, zero_init_residual=False, p=0, parallel=[0.9, 0.7, 0.5],num_layers=1):
+    def __init__(self, block, layers, num_classes=7, zero_init_residual=False, p=0, parallel=[0.5, 0.5, 0.5],num_layers=1):
         super(Network, self).__init__()
         self.inplanes = 64
         self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3,
@@ -239,7 +200,7 @@ class Network(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        out = self.conv1(x) #input [8,3,448,448] output [8,64,224,224]
+        out = self.conv1(x) #input [8,3,448,448]
         out = self.bn1(out) #output [2,64,224,224]
         out = self.relu(out) #output [2,64,224,224]
         out = self.maxpool(out) #[2,64,112,112]
@@ -255,49 +216,4 @@ class Network(nn.Module):
 def init_weights(m):
     if isinstance(m, nn.Conv2d):
         torch.nn.init.kaiming_normal_(m.weight)
-
-
-if __name__ == '__main__':
-
-    # data_aug
-    train_csvdir = 'D:/data/FER/ck_images/ck_train.csv'
-    traindir = "D:/data/FER/ck_images/Images/ck_train/"
-    val_csvdir = 'D:/data/FER/ck_images/ck_val.csv'
-    valdir = "D:/data/FER/ck_images/Images/ck_val/"
-
-    transformation = transforms.Compose([transforms.ToTensor()])
-
-    train_dataset =ImageData(csv_file = train_csvdir, img_dir = traindir, datatype = 'ck_train',transform = transformation)
-    train_loader = DataLoader(dataset=train_dataset, batch_size=1, shuffle=True)
-
-
-
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model = Network(Bottleneck, [3, 4, 6, 3]).to(device)
-
-    criterion = nn.CrossEntropyLoss(reduction='sum')
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
-
-
-    # for epoch in range(1):
-    #     for batch_idx, (anchor_img, positive_img, negative_img, anchor_label) in enumerate(train_loader):
-    #         # get data_aug to cuda
-    #         anchor_img, positive_img, negative_img = \
-    #             anchor_img.to(device), positive_img.to(device), negative_img.to(device)
-    #
-    #
-    #         anchor_label = anchor_label.to(device)
-    #
-    #         optimizer.zero_grad()
-    #
-    #         anchor_feature, anchor_out = model(anchor_img)
-    #         entropy_loss = criterion(anchor_out, anchor_label)
-    #         loss = entropy_loss
-    #
-    #         loss.backward()
-    #         optimizer.step()
-    #         _, preds = torch.max(anchor_out, 1)
-
-
-    summary(model, input_size=(3, 224, 224))
 

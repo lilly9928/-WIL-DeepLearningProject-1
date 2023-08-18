@@ -29,7 +29,7 @@ def main():
     step_size = 10
     gamma = 0.1
     num_epochs=30
-    batch_size = 64
+    batch_size = 1024
     num_workers = 4
     save_step=1
 
@@ -117,8 +117,6 @@ def main():
 
                     loss = criterion(output, label)
 
-                    #train일 경우 역전파 실행
-                    #역전파 코드 공부하기
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
