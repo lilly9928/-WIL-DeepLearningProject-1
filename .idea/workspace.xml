@@ -5,33 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7c691f2-c340-4eb3-83f7-c07f19867505" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap2.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/dat_study.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/dcn_study.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/transformerStudy/swintransformer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/vqa_study/dat_study.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TirpletLoss_FER/PCA.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TirpletLoss_FER/main0808.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TirpletLoss_FER/transformNetwork448.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TirpletLoss_FER/visualization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/-WIL-Expression-Recognition-Study.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/-WIL-Expression-Recognition-Study.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap9.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/data/class2.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/data/diabetes.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/python_10장.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/.idea/ImageCaptioning.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/get_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageCaption_DAT/dataloader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageCaption_DAT/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ImageCaptioning/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageCaption_DAT/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Study/affine_grid_sample.py" beforeDir="false" afterPath="$PROJECT_DIR$/ImageCaption_DAT/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TirpletLoss_FER/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/TirpletLoss_FER/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TirpletLoss_FER/raf_imagedata.py" beforeDir="false" afterPath="$PROJECT_DIR$/TirpletLoss_FER/raf_imagedata.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TirpletLoss_FER/transformNetwork.py" beforeDir="false" afterPath="$PROJECT_DIR$/TirpletLoss_FER/transformNetwork.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VQA/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/VQA/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap2.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jupyter Notebook" />
         <option value="Python Script" />
+        <option value="Jupyter Notebook" />
       </list>
     </option>
   </component>
@@ -84,7 +63,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/github/-WIL-Expression-Recognition-Study/TirpletLoss_FER/code_appendix",
+    "last_opened_file_path": "D:/github/-WIL-Expression-Recognition-Study/Study/DeepLearningwithPytorch",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -95,18 +74,18 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\github\-WIL-Expression-Recognition-Study\Study\DeepLearningwithPytorch" />
       <recent name="D:\github\-WIL-Expression-Recognition-Study\TirpletLoss_FER\code_appendix" />
       <recent name="D:\github\-WIL-Expression-Recognition-Study\TirpletLoss_FER" />
       <recent name="D:\github\-WIL-Expression-Recognition-Study\Study" />
       <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\Study\Imagecaption\coco_30_mine" />
-      <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\Study\Imagecaption" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\github\-WIL-Expression-Recognition-Study\Study\DeepLearningwithPytorch\data" />
+      <recent name="D:\github\-WIL-Expression-Recognition-Study\Study\DeepLearningwithPytorch" />
       <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\Study\Imagecaption\coco_30_mine" />
       <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\Mask_VQA\logs\221007" />
       <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\FER_Preprocessing" />
-      <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\Mask_VQA\util" />
-      <recent name="D:\GitHub\-WIL-Expression-Recognition-Study\Mask_VQA" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main (3)">
@@ -273,7 +252,7 @@
       <workItem from="1690185898013" duration="590000" />
       <workItem from="1690186495566" duration="82110000" />
       <workItem from="1691669961206" duration="28312000" />
-      <workItem from="1691974337138" duration="13642000" />
+      <workItem from="1691974337138" duration="40533000" />
     </task>
     <servers />
   </component>
