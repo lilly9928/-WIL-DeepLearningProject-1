@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7c691f2-c340-4eb3-83f7-c07f19867505" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap9.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/data/class2.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/data/diabetes.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/python_10장.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap2.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Study/DeepLearningwithPytorch/chap2.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,18 +55,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/github/-WIL-Expression-Recognition-Study/Study/DeepLearningwithPytorch",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/github/-WIL-Expression-Recognition-Study/Study/DeepLearningwithPytorch&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\github\-WIL-Expression-Recognition-Study\Study\DeepLearningwithPytorch" />
@@ -252,7 +247,10 @@
       <workItem from="1690185898013" duration="590000" />
       <workItem from="1690186495566" duration="82110000" />
       <workItem from="1691669961206" duration="28312000" />
-      <workItem from="1691974337138" duration="40533000" />
+      <workItem from="1691974337138" duration="44802000" />
+      <workItem from="1694138474944" duration="3100000" />
+      <workItem from="1694156078179" duration="1228000" />
+      <workItem from="1694402824508" duration="1261000" />
     </task>
     <servers />
   </component>
